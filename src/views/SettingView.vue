@@ -25,28 +25,6 @@
                 <template #title>Are you sure to delete this {{ selected_consultant !== '' ? `consultant named '${selected_consultant.name}'` : selected_user !== '' ?  `user named '${selected_user.name}'` : selected_branch !== '' ? `branch named '${selected_branch.name}'` : ''}} ?</template>
             </ConfirmDialog>
             <CreateDialog @create="create_branch_consultant" @input_data="create_data_object" :title="create_mode == 'branch' ? 'Create A New Branch' : 'Create A New Consultant'" :array="create_mode == 'branch' ? ['name','level','phone_number','address'] : ['name','speciality','designation']" />
-            <div id="select_date" class="modal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Set Available Date for {{ selected_consultant.name }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <label class="form-label">Set Available Date</label>
-                            <input type="date" class="form-control" @input="set_dates.push($event.target.value)">
-                            <div class="form-control">
-                                <label class="form-label"><strong>Selected Dates:</strong></label>
-                                <ListView @remove="remove_set_date" @select="select_set_date" :style="'height:200px; overflow: auto;'" :is_date="true" :loading="false" :selected_value="selected_set_date" :array="set_dates" :empty_msg="'You haven\'t set any dates yet.'"/>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div class="col-12 col-lg-8 col-xl-6 mx-auto">
@@ -60,10 +38,14 @@
             </SubHeader>
         </div>
     </div>
+    <SelectDate @submit="save_dates()" :selected_consultant="selected_consultant" :array="set_dates">
+        <ListView @remove="remove_set_date" @select="select_set_date" :style="'height:200px; overflow: auto;'" :is_date="true" :loading="false" :selected_value="selected_set_date" :array="set_dates" :empty_msg="'You haven\'t set any dates yet.'" />
+    </SelectDate>
 </div>
 </template>
 
 <script setup>
+import SelectDate from '../components/Settings/SelectDate.vue';
 import ListView from '../components/ListView.vue';
 import SubHeader from '../components/Settings/SubHeader.vue';
 import CreateDialog from '../components/Settings/CreateDialog.vue';
@@ -119,6 +101,10 @@ onMounted(() => {
     })
     $('#create_dialog').on('hide.bs.modal', function () {
         initiate_settings(false)
+    })
+    $('#select_date').on('hide.bs.modal', function () {
+        set_dates.value = []
+        $('#date_selector').val('')
     })
     initiate_settings()
 })
@@ -273,6 +259,20 @@ const create_branch_consultant = async () => {
 const show_set_date = () => $('#select_date').modal('show')
 const select_set_date = (val) => selected_set_date.value = val
 const remove_set_date = (val) => set_dates.value.splice(val,1)
+
+const save_dates = async () => {
+    const res = await init.sendDataToServer('consultants/set_date','post',{
+        dates: set_dates.value,
+        consultant_id: selected_consultant.value.id,
+    })
+
+    console.log(res);
+
+    if (res?.response) return store.toggleAlert(res.response.data.message)
+    
+    $('#select_date').modal('hide')
+    return store.toggleAlert(res.data.status,false,200)
+}
 </script>
 
 <style scoped>
