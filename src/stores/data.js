@@ -17,26 +17,60 @@ export const useDataStore = defineStore("global_variables", () => {
     const users = ref([]);
     const consultants = ref([]);
     const branches = ref([]);
+    const set_dates = ref([]);
+    const consultant_loading = ref(true);
+    const user_loading = ref(true);
+    const branch_loading = ref(true);
+    const consultant_available_date_loading = ref(true);
     
-    const initiate_settings = async () => {
-        users.value = []
-        consultants.value = []
-        branches.value = []
-        selected_user.value = ''
-        selected_consultant.value = ''
-        selected_branch.value = ''
+    const initiate_settings = async (reload = true) => {
+        if(reload) {
+            user_loading.value = true
+            consultant_loading.value = true
+            branch_loading.value = true
+            // consultant_available_date_loading.value = true
+            selected_user.value = ''
+            selected_consultant.value = ''
+            selected_branch.value = ''
+            users.value = []
+            consultants.value = []
+            branches.value = []    
+        }
 
-        content_loading.value = true
+        if(selected_user.value !== '') {
+            user_loading.value = true
+            users.value = []
+        }
+
+        if(selected_consultant.value !== '') {
+            consultant_loading.value = true
+            consultants.value = []
+        }
+        if(selected_branch.value !== '') {
+            branch_loading.value = true
+            branches.value = []
+        }
+        // if(val == 'consultant_date') consultant_available_date_loading.value = true
 
         const res_users = await init.sendDataToServer('users');
         const res_consultants = await init.sendDataToServer('consultants');
         const res_branches = await init.sendDataToServer('branches','post');
 
         content_loading.value = false
+        user_loading.value = false
+        consultant_loading.value = false
+        // consultant_available_date_loading.value = false
+        branch_loading.value = false
 
-        users.value = res_users.data.users
-        consultants.value = res_consultants.data.consultants
-        branches.value = res_branches.data.branches
+        if(reload) {
+            users.value = res_users.data.users
+            consultants.value = res_consultants.data.consultants
+            branches.value = res_branches.data.branches    
+        }
+
+        if(selected_user.value !== '') users.value = res_users.data.users
+        if(selected_consultant.value !== '') consultants.value = res_consultants.data.consultants
+        if(selected_branch.value !== '') branches.value = res_branches.data.branches
 
         users.value.forEach((value)=>{
             delete value.created_at
@@ -89,5 +123,10 @@ export const useDataStore = defineStore("global_variables", () => {
         branches,
         consultants,
         users,
+        set_dates,
+        consultant_loading,
+        consultant_available_date_loading,
+        user_loading,
+        branch_loading,
     };
 });
