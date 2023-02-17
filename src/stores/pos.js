@@ -21,6 +21,8 @@ export const usePosStore = defineStore('pos_variables',() => {
     const selected_patient = ref('Guest')
     const payment_type = ref('Cash');
     const clear_mode = ref('all');
+    const not_found = ref(false)
+    const searching = ref(false)
 
     const select_method = val => {
         current_method.value = val
@@ -49,11 +51,20 @@ export const usePosStore = defineStore('pos_variables',() => {
         console.log(current_brand_name.value);
     }
 
-    const initiate = async () => {
+    const initiate = async (search_string = null) => {
+        patients.value = []
+        const res_patients = search_string !== null ? await init.sendDataToServer('patients?name=' + search_string) : await init.sendDataToServer('patients')
+        patients.value = res_patients.data.patients
+
+        if(search_string !== null) {
+            searching.value = false
+            if(patients.value.length == 0) not_found.value = true
+            return;
+        }
+
         drugs.value = []
         item_lists.value = []
         const res = await init.sendDataToServer('drugs')
-        const res_patients = await init.sendDataToServer('patients')
         if (current_category.value !== '') {
             generic_names.value = []
             drugs.value = []
@@ -77,7 +88,6 @@ export const usePosStore = defineStore('pos_variables',() => {
             })    
         }
 
-        patients.value = res_patients.data.patients
         console.log(drugs.value);
     }
 
@@ -153,6 +163,8 @@ export const usePosStore = defineStore('pos_variables',() => {
         selected_patient,
         payment_type,
         clear_mode,
+        not_found,
+        searching,
         select_method,
         select_category,
         select_generic_name,

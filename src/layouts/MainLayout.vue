@@ -44,7 +44,7 @@
         </div>
     </div>
 </div>
-<FooterLayout />
+<FooterLayout :auth_user="auth_user" />
 </template>
 
 <script setup>
@@ -70,6 +70,11 @@ const {
 </script>
 
 <style>
+.form-input:checked {
+    background-color: #1d92cf;
+    border-color: #1d92cf;
+}
+
 .custom-bg {
     background: #2c3840 !important;
 }

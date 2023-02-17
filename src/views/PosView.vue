@@ -16,8 +16,8 @@
         <hr v-if="item_lists.length !== 0">
         <TotalBar :total="total" :discount="discount" :grand_total="grand_total" v-if="item_lists.length !== 0"/>
         <div class="row mx-0" style="width: 100%;" v-if="item_lists.length !== 0">
-            <PosButtons :button_one="'Customer'" :button_two="'Print Receipt'" @clicked_one="show_select_patient" />
-            <PosButtons :button_one="'Payment'" :button_two="'Clear'" @clicked_two="show_clear" @clicked_one="select_payment" />
+            <PosButtons :button_one="'Customer'" :button_two="'Print Receipt'" @clicked_one="show_select_patient" @clicked_two="save_print_receipt"/>
+            <PosButtons :button_one="'Payment'" :button_two="'Clear'" @clicked_two="show_clear" @clicked_one="show_select_payment" />
         </div>
     </template>
 </PosLayout>
@@ -63,15 +63,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="form-floating">
-            <select v-model="payment_type" class="form-select">
-                <option selected disabled>Payment Types:</option>
-                <option value="Cash">Cash</option>
-                <option value="K-Pay">K-Pay</option>
-            </select>
-            <label>Choose Payment Type</label>
-        </div>
-      </div>
+        <SearchableList :array="['Cash','K-Pay']" :selected_val="payment_type" @select="select_payment"/>
+    </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
@@ -86,14 +79,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="form-floating">
-            <select v-model="selected_patient" class="form-select">
-                <option selected disabled>Customers:</option>
-                <option value="Guest">Guest</option>
-                <option :value="patient.name" v-for="patient in patients">{{patient.name}}</option>
-            </select>
-            <label>Choose Customer</label>
-        </div>
+        <SearchableList :searchable="true" @select="select_customer" :selected_val="selected_patient" @search="search_customers" :array="['Guest', ...patients]" :path="['name']" :placeholder="'Choose Customers'"/>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -104,6 +90,7 @@
 </template>
 
 <script setup>
+import SearchableList from '../components/_searchable_list.vue';
 import PosButtons from '../components/POS/PosButtons.vue';
 import HeaderSix from '../components/POS/HeaderSix.vue';
 import HeaderThree from '../components/POS/HeaderThree.vue';
@@ -131,15 +118,27 @@ const {
     patients,
     selected_patient,
     payment_type,
-    clear_mode
+    clear_mode,
 } = storeToRefs(store);
 const {
-    clear_cart
+    clear_cart,
+    initiate
 } = store;
 const data_store = useDataStore();
 
 const show_clear = () => $('#clear_cart').modal('show')
 const show_select_patient = () => $('#select_patient').modal('show')
-const select_payment = () => $('#select_payment').modal('show')
+const show_select_payment = () => $('#select_payment').modal('show')
+const search_customers = (val) => initiate(val)
 
+const select_customer = val => {
+    if(typeof(val) == 'object') return selected_patient.value = val.name
+    selected_patient.value = val
+};
+const select_payment = val => payment_type.value = val
+const save_print_receipt = async () => {
+    const res = await init.sendDataToServer('save_receipt','post',{
+
+    })
+}
 </script>

@@ -4,12 +4,38 @@
         {{ selected_val == '' ? placeholder : set_name(selected_val,path)  }}
     </button>
     <ul id="select_sex" class="dropdown-menu form-control" style="overflow: auto;" :style="array.length > 3 ? 'height:200px;' : ''">
+        <input type="text" class="form-control" v-if="searchable" @keydown="pause_search()" @keyup="begin_search($event.target.value)" placeholder="Type here to search">
+        <li role="button" class="p-3 custom-select-button" v-if="!not_found && searching && searchable">Searching...</li>
+        <li role="button" class="p-3 custom-select-button text-danger" v-if="not_found && !searching && searchable">Not Found</li>
         <li class="p-3 custom-select-button" v-if="array.length == ''">Loading...</li>
-        <li role="button" class="p-3 custom-select-button" v-for="val in array" @click="$emit('select',val)">{{ set_name(val,path) }}</li>
+        <li role="button" class="p-3 custom-select-button" v-if="!searching" v-for="val in array" @click="$emit('select',val)">{{ set_name(val,path) }}</li>
     </ul>
 </li>
 </template>
 <script setup>
+import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
+import { usePosStore } from '../stores/pos';
+
+const store = usePosStore();
+const {
+    searching,
+    not_found
+} = storeToRefs(store)
+const timer_id = ref('')
+const pause_search = () => {
+    clearTimeout(timer_id.value)
+    searching.value = false
+}
+const begin_search = val => {
+    not_found.value = false
+    clearTimeout(timer_id.value)
+    searching.value = true
+    timer_id.value = setTimeout(() => {
+        emit('search',val)
+    }, 1000)
+}
+
 const make_uppercase = (str) => {
     if(str.length == 2) return str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -27,6 +53,10 @@ const set_name = (val,path = null) => {
 }
 
 defineProps({
+    searchable: {
+        type: Boolean,
+        default: false,
+    },
     path: {
         type: Array,
     },
@@ -46,5 +76,5 @@ defineProps({
         default: 'Please select one'
     }
 })
-defineEmits(['select'])
+const emit = defineEmits(['select','search'])
 </script>

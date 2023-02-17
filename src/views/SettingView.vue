@@ -7,7 +7,7 @@
         <div class="setting-box form-control pt-4 shadow">
             <div class="mb-3">
                 <label for="hospital_name" class="form-label"><strong>Hospital Name:</strong></label>
-                <input type="text" class="form-control" name="hospital_name" placeholder="e.g. My Hospital" v-model="hospital_name" disabled>
+                <input type="text" class="form-control custom-disabled" name="hospital_name" placeholder="e.g. My Hospital" v-model="hospital_name" :readonly="true" @change="save_settings()" @dblclick="$event.target.readOnly=''" @blur="$event.target.readOnly=true">
             </div>
             <hr>
             <!-- <div class="mb-3"> // TO-DO later
@@ -18,11 +18,11 @@
                 </div>
             </div> -->
             <SubHeader @create_mode="set_create_mode" @click_two="show_set_date" :button_name_two="(selected_consultant == '') ? '' : 'Set Consultant Date'" :route_path="'#create_dialog'" :title="'Consultants:'" :button_name="'Add Consultant'">
-                <ListView :style="'height: 331px; overflow: auto;'" :loading="consultant_loading" :array="consultants" :selected_value="selected_consultant" @select="select_consultant" @edit_on="edit_on" />
+                <ListView :type="'consultant'" :style="'height: 331px; overflow: auto;'" :loading="consultant_loading" :array="consultants" :selected_value="selected_consultant" @select="select_consultant" @edit_on="edit_on" />
             </SubHeader>
             <EditDialog :object="selected_consultant !== '' ? selected_consultant : selected_user !== '' ? selected_user : selected_branch !== '' ? selected_branch : ''" :title="selected_consultant !== '' ? 'Consultant' : selected_user !== '' ? 'User' : selected_branch !== '' ? 'Branch' : ''" :edit_mode="edit_mode" @update="update" @edit="edit_values" @close="close" />
             <ConfirmDialog @confirm="destroy">
-                <template #title>Are you sure to delete this {{ selected_consultant !== '' ? `consultant named '${selected_consultant.name}'` : selected_user !== '' ?  `user named '${selected_user.name}'` : selected_branch !== '' ? `branch named '${selected_branch.name}'` : ''}} ?</template>
+                <template #title>Are you sure to delete this {{ selected_consultant !== '' && selected_set_date == '' ? `consultant named '${selected_consultant.name}'` : selected_user !== '' ?  `user named '${selected_user.name}'` : selected_branch !== '' ? `branch named '${selected_branch.name}'` : selected_set_date !== '' ? `this date ${selected_set_date.date_available}` : ''}} ?</template>
             </ConfirmDialog>
             <CreateDialog @create="create_branch_consultant" @input_data="create_data_object" :title="create_mode == 'branch' ? 'Create A New Branch' : 'Create A New Consultant'" :array="create_mode == 'branch' ? ['name','level','phone_number','address'] : ['name','speciality','designation']" />
         </div>
@@ -41,10 +41,15 @@
     <SelectDate @submit="save_dates()" :selected_consultant="selected_consultant" :array="set_dates">
         <ListView @remove="remove_set_date" @select="select_set_date" :style="'height:200px; overflow: auto;'" :is_date="true" :loading="false" :selected_value="selected_set_date" :array="set_dates" :empty_msg="'You haven\'t set any dates yet.'" />
     </SelectDate>
+    <DateEdit :title="'Manage Consultant Appointment Dates'">
+        <ListView :style="'height: 200px; overflow: auto;'" :type="'consultant_dates'" @select="select_available_date" :loading="consultant_available_date_loading" :array="consultant_dates" :selected_value="selected_set_date"/>
+    </DateEdit>
 </div>
 </template>
 
 <script setup>
+import router from '../router/index.js';
+import DateEdit from '../components/Settings/DateEdit.vue';
 import SelectDate from '../components/Settings/SelectDate.vue';
 import ListView from '../components/ListView.vue';
 import SubHeader from '../components/Settings/SubHeader.vue';
@@ -78,26 +83,36 @@ const {
     selected_user,
     selected_consultant,
     selected_branch,
-    content_loading,
     consultant_loading,
     consultant_available_date_loading,
     user_loading,
     branch_loading,
-    set_dates
+    set_dates,
+    consultant_dates
 } = storeToRefs(store);
 
 const {
-    initiate_settings
+    initiate_settings,
+    load_consultant_dates
 } = store;
 
 onMounted(() => {
     hospital_name.value = auth_user.value ? auth_user.value.setting.hospital_name : 'My Hospital EMRS'
     theme.value = auth_user.value.setting.theme == 'dark' ? true : false
+    $('#show_dates').on('show.bs.modal', async function() {
+        load_consultant_dates()
+    })
+
+    $('#show_dates').on('hide.bs.modal', async function() {
+        selected_set_date.value = ''
+    })
+    
     $('#edit_dialog').on('hide.bs.modal', function () {
         initiate_settings(false)
     })
     $('#confirm_dialog').on('hide.bs.modal', function () {
         initiate_settings(false)
+        selected_set_date.value = ''
     })
     $('#create_dialog').on('hide.bs.modal', function () {
         initiate_settings(false)
@@ -202,7 +217,7 @@ const destroy = async () => {
         return
     }
 
-    if (selected_consultant.value !== '') {
+    if (selected_consultant.value !== '' && selected_set_date.value == '') {
         const res = await init.sendDataToServer('consultant/delete', 'delete', selected_consultant.value)
 
         if (res?.response?.data?.message) {
@@ -214,6 +229,24 @@ const destroy = async () => {
         store.toggleAlert(res.data.status, false, 200)
         return
     }
+
+    if (selected_set_date.value !== '') {
+        console.log(selected_set_date.value);
+        const res = await init.sendDataToServer('consultants/delete_date', 'delete',{
+            consultant_id:  selected_consultant.value.id,
+            date_available: selected_set_date.value.date_available
+        })
+
+        if (res?.response?.data?.message) {
+            store.toggleAlert(res.response.data.message)
+            return
+        }
+
+        $('#confirm_dialog').modal('toggle')
+        store.toggleAlert(res.data.status, false, 200)
+        return
+    }
+
 }
 
 const set_create_mode = val => {
@@ -258,6 +291,7 @@ const create_branch_consultant = async () => {
 
 const show_set_date = () => $('#select_date').modal('show')
 const select_set_date = (val) => selected_set_date.value = val
+const select_available_date = val => selected_set_date.value = val
 const remove_set_date = (val) => set_dates.value.splice(val,1)
 
 const save_dates = async () => {
@@ -273,11 +307,26 @@ const save_dates = async () => {
     $('#select_date').modal('hide')
     return store.toggleAlert(res.data.status,false,200)
 }
+
+const save_settings = async () => {
+    const res = await init.sendDataToServer('users/settings', 'post', {
+        hospital_name: hospital_name.value,
+        theme: theme.value
+    })  
+
+    router.go(0)   
+}
 </script>
 
 <style scoped>
 .form-check-input:checked {
     background-color: grey !important;
     border-color: grey !important;
+}
+
+.custom-disabled:read-only {
+    background: rgb(192, 190, 190);
+    color: white;
+    cursor: default;
 }
 </style>

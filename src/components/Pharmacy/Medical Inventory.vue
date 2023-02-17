@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import SearchableList from './components/_searchable_list.vue';
+import SearchableList from '../_searchable_list.vue';
 import DataTable from './components/_data_table.vue';
 import {
     usePharmacyStore

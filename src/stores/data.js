@@ -18,6 +18,7 @@ export const useDataStore = defineStore("global_variables", () => {
     const consultants = ref([]);
     const branches = ref([]);
     const set_dates = ref([]);
+    const consultant_dates = ref([]);
     const consultant_loading = ref(true);
     const user_loading = ref(true);
     const branch_loading = ref(true);
@@ -28,7 +29,6 @@ export const useDataStore = defineStore("global_variables", () => {
             user_loading.value = true
             consultant_loading.value = true
             branch_loading.value = true
-            // consultant_available_date_loading.value = true
             selected_user.value = ''
             selected_consultant.value = ''
             selected_branch.value = ''
@@ -50,16 +50,15 @@ export const useDataStore = defineStore("global_variables", () => {
             branch_loading.value = true
             branches.value = []
         }
-        // if(val == 'consultant_date') consultant_available_date_loading.value = true
 
         const res_users = await init.sendDataToServer('users');
         const res_consultants = await init.sendDataToServer('consultants');
         const res_branches = await init.sendDataToServer('branches','post');
 
+
         content_loading.value = false
         user_loading.value = false
         consultant_loading.value = false
-        // consultant_available_date_loading.value = false
         branch_loading.value = false
 
         if(reload) {
@@ -95,6 +94,23 @@ export const useDataStore = defineStore("global_variables", () => {
         })
     }
 
+    async function load_consultant_dates() {
+        consultant_available_date_loading.value = true
+        const res_consultant_dates = await init.sendDataToServer('consultants/available?consultant_id=' + selected_consultant.value.id)
+        consultant_available_date_loading.value = false
+    
+        consultant_dates.value = res_consultant_dates.data.available_dates
+
+        consultant_dates.value.forEach(val => {
+            delete val.id
+            delete val.consultant_id
+            delete val.hospital_id
+            delete val.deleted_at
+            delete val.created_at
+            delete val.updated_at
+        })
+    }
+
     function toggleAlert(message, loading, status) {
         alert_message.value = message;
         alert_status.value = status;
@@ -109,6 +125,7 @@ export const useDataStore = defineStore("global_variables", () => {
     return { 
         toggleAlert,
         initiate_settings,
+        load_consultant_dates,
         selected_user,
         selected_branch,
         selected_consultant,
@@ -128,5 +145,6 @@ export const useDataStore = defineStore("global_variables", () => {
         consultant_available_date_loading,
         user_loading,
         branch_loading,
+        consultant_dates
     };
 });

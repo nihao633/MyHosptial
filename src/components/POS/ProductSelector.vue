@@ -30,7 +30,7 @@
 <script setup>
 import { usePosStore } from '../../stores/pos';
 import { onMounted } from 'vue';
-import SearchableList from '../Pharmacy/components/_searchable_list.vue';
+import SearchableList from '../_searchable_list.vue';
 import { storeToRefs } from 'pinia';
 
 const store = usePosStore();

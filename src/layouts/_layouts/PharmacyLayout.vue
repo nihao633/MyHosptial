@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import SearchableList from '../../components/Pharmacy/components/_searchable_list.vue';
+import SearchableList from '../../components/_searchable_list.vue';
 import {
     storeToRefs
 } from 'pinia';
