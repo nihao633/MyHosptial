@@ -17,6 +17,7 @@ export const usePosStore = defineStore('pos_variables',() => {
     const total = ref(0)
     const discount = ref(0)
     const grand_total = ref(0)
+    const customer_paid = ref('')
     const patients = ref([])
     const selected_patient = ref('Guest')
     const payment_type = ref('Cash');
@@ -115,8 +116,22 @@ export const usePosStore = defineStore('pos_variables',() => {
 
         if(res?.response?.data.status) return store.toggleAlert(res.response.data.status)
         console.log(res);
-        item_lists.value.push({item_name: `${current_brand_name.value['Brand Name']} (${current_brand_name.value['Generic Name']} ${current_brand_name.value['Drug Form']} ${current_brand_name.value['Drug Dosage']})`, quantity: quantity.value, unit_price: res.data.resale_price, price: quantity.value * res.data.resale_price, discount: res.data.discount, selected_to_clear: false})
-
+        item_lists.value.push({
+            drug: current_brand_name.value, 
+            customer: selected_patient.value !== 'Guest' ? selected_patient.value : null, 
+            payment_type: payment_type.value, 
+            item_name: `
+                ${current_brand_name.value['Brand Name']} 
+                (${current_brand_name.value['Generic Name']} 
+                ${current_brand_name.value['Drug Form']} ${current_brand_name.value['Drug Dosage']})
+            `, 
+            quantity: quantity.value, 
+            unit_price: res.data.resale_price, 
+            price: quantity.value * res.data.resale_price, 
+            discount: res.data.discount, 
+            selected_to_clear: false
+        })
+        
         total.value += (quantity.value * res.data.resale_price)
         discount.value += res.data.discount
         grand_total.value += ((quantity.value * res.data.resale_price) - res.data.discount)
@@ -159,6 +174,7 @@ export const usePosStore = defineStore('pos_variables',() => {
         total,
         discount,
         grand_total,
+        customer_paid,
         patients,
         selected_patient,
         payment_type,

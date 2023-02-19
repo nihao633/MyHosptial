@@ -6,7 +6,7 @@
     </template>
     <template #content_two>
         <HeaderThree :class="'mb-3'" :title="'Cashier'" :string="data_store.auth_user.name" />
-        <HeaderSix :title="'Customer'" :string="selected_patient" />
+        <HeaderSix :title="'Customer'" :string="typeof(selected_patient) == 'object' ? selected_patient.name : selected_patient" />
         <HeaderSix :title="'Payment Type'" :string="payment_type" />
         <hr>
         <div class="overflow-auto" style="height: 18vh;">
@@ -16,7 +16,7 @@
         <hr v-if="item_lists.length !== 0">
         <TotalBar :total="total" :discount="discount" :grand_total="grand_total" v-if="item_lists.length !== 0"/>
         <div class="row mx-0" style="width: 100%;" v-if="item_lists.length !== 0">
-            <PosButtons :button_one="'Customer'" :button_two="'Print Receipt'" @clicked_one="show_select_patient" @clicked_two="save_print_receipt"/>
+            <PosButtons :button_one="'Customer'" :button_two="'Print Receipt'" @clicked_one="show_select_patient" @clicked_two="show_print_receipt"/>
             <PosButtons :button_one="'Payment'" :button_two="'Clear'" @clicked_two="show_clear" @clicked_one="show_select_payment" />
         </div>
     </template>
@@ -87,6 +87,34 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="print_receipt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" @submit.prevent="save_print_receipt()">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Print Receipt</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Total Cost</span>
+            <input type="text" class="form-control" :value="grand_total" disabled>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Paid</span>
+            <input id="paid_input" type="text" class="form-control" placeholder="Enter the paid amount here" v-model="customer_paid" autocomplete="off">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Change</span>
+            <input type="text" class="form-control" :value="customer_paid == 0 ? 0 : customer_paid - grand_total" disabled>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Print</button>
+      </div>
+    </form>
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -108,6 +136,7 @@ import {
 import {
     storeToRefs
 } from 'pinia';
+import { onMounted } from 'vue';
 
 const store = usePosStore();
 const {
@@ -115,6 +144,7 @@ const {
     total,
     discount,
     grand_total,
+    customer_paid,
     patients,
     selected_patient,
     payment_type,
@@ -122,23 +152,65 @@ const {
 } = storeToRefs(store);
 const {
     clear_cart,
-    initiate
+    initiate,
+    clear
 } = store;
 const data_store = useDataStore();
 
+onMounted(()=>{
+    const paid_input = document.getElementById('paid_input')
+    $('#print_receipt').on('shown.bs.modal',()=>{
+        paid_input.focus()
+    })
+    $('#print_receipt').on('hide.bs.modal',()=>{
+        customer_paid.value = ''
+    })
+})
 const show_clear = () => $('#clear_cart').modal('show')
 const show_select_patient = () => $('#select_patient').modal('show')
 const show_select_payment = () => $('#select_payment').modal('show')
 const search_customers = (val) => initiate(val)
 
 const select_customer = val => {
-    if(typeof(val) == 'object') return selected_patient.value = val.name
     selected_patient.value = val
-};
-const select_payment = val => payment_type.value = val
+    item_lists.value.forEach(item => {
+        item.customer = val
+    });
+}
+const select_payment = val => {
+    payment_type.value = val
+    item_lists.value.forEach(item => {
+        item.payment_type = val
+    });
+}
+const show_print_receipt = () => $('#print_receipt').modal('show');
 const save_print_receipt = async () => {
+    if(customer_paid.value == '' || customer_paid.value == 0) {
+        paid_input.focus()
+        return data_store.toggleAlert('Please enter the paid amount to continue.')
+    }
+    
+    if(customer_paid.value < grand_total.value) 
+        return data_store.toggleAlert('The amount paid is insufficient.')
     const res = await init.sendDataToServer('save_receipt','post',{
-
+        array: item_lists.value,
+        transaction: {
+            total: total.value,
+            discount: discount.value,
+            grand_total: grand_total.value,
+            paid: customer_paid.value,
+            change: customer_paid.value - grand_total.value,
+        }
     })
+
+    console.log(res);
+    clear()
+    $('#print_receipt').modal('hide')
 }
 </script>
+<style scoped>
+.form-check-input:checked{
+    background-color: #1d92cf;
+    border-color: #1d92cf;
+}
+</style>
