@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import init from '../helpers/init'
 
 export const useDataStore = defineStore("global_variables", () => {
-    const content_loading = ref(true);
+    const content_loading = ref(false);
     const page_loading = ref(true);
     const alert_loading = ref(false);
     const alert_status = ref(200);

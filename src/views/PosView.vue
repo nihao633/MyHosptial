@@ -10,11 +10,12 @@
         <HeaderSix :title="'Payment Type'" :string="payment_type" />
         <hr>
         <div class="overflow-auto" style="height: 18vh;">
-            <p class="text-center py-4"  v-if="item_lists.length == 0"><em><strong>Added items will be displayed here.</strong></em></p>
-            <ProductView v-for="item in  item_lists" :price="item.price" :unit_price="item.unit_price" :item_name="item.item_name" :quantity="item.quantity" />
+            <p class="text-center py-4"  v-if="item_lists.length == 0 && !data_store.content_loading"><em><strong>Added items will be displayed here.</strong></em></p>
+            <p class="text-center py-4 text-danger"  v-if="data_store.content_loading"><em><strong>Adding items...<br>Please wait...</strong></em></p>
+            <ProductView v-if="!data_store.content_loading && item_lists.length !== 0" v-for="(item,key) in  item_lists" :item_key="key" :price="item.price" :unit_price="item.unit_price" :item_name="item.item_name" :quantity="item.quantity" />
         </div>
         <hr v-if="item_lists.length !== 0">
-        <TotalBar :total="total" :discount="discount" :grand_total="grand_total" v-if="item_lists.length !== 0"/>
+        <TotalBar :item_one="total" :item_one_name="'Total:'" :item_two_name="'Discount:'" :item_two="discount" :item_three_name="'Grand Total:'" :item_three="grand_total" v-if="item_lists.length !== 0"/>
         <div class="row mx-0" style="width: 100%;" v-if="item_lists.length !== 0">
             <PosButtons :button_one="'Customer'" :button_two="'Print Receipt'" @clicked_one="show_select_patient" @clicked_two="show_print_receipt"/>
             <PosButtons :button_one="'Payment'" :button_two="'Clear'" @clicked_two="show_clear" @clicked_one="show_select_payment" />
@@ -114,6 +115,24 @@
       </div>
     </form>
   </div>
+  <div id="voucher" class="d-none">
+    <div class="px-3">
+        <h1 class="text-center"><i class="fa-solid fa-book-medical"></i> {{ data_store.auth_user ? data_store.auth_user.setting.hospital_name : 'My Hospital EMRS' }}</h1>
+        <div>
+            <p class="text-left"><span><i class="fa-solid fa-location-dot"></i> No. 675/B, Marga Street, 12 Quarter, South Okkalapa Township, Yangon, Myanmar <i class="fa-solid fa-phone"></i>+95 9 779 807 807 <i class="fa-solid fa-envelope"></i> nihao633@gmail.com</span></p>
+        </div>
+    </div>
+    <hr>
+    <h3 class="text-center py-2">Purchase Receipt</h3>
+    <ProductView :item_key="'No.'" :price="'Price'" :unit_price="''" :item_name="'Name'" :quantity="''" />
+    <ProductView v-for="(item,key) in  item_lists" :item_key="key" :price="item.price" :unit_price="item.unit_price" :item_name="item.item_name" :quantity="item.quantity" />
+    <div class="position-absolute bottom-0 mx-0 px-0 w-100">
+        <hr>
+        <TotalBar :item_one="total" :item_one_name="'Total:'" :item_two_name="'Discount:'" :item_two="discount" :item_three_name="'Grand Total:'" :item_three="grand_total"/>
+        <TotalBar :item_one="customer_paid" :item_one_name="'Paid:'" :item_two_name="'Change:'" :item_two="customer_paid - grand_total"/>
+        <p class="text-center text-secondary"><em><small>Your satisfaction is our service.</small></em></p>
+    </div>
+</div>
 </div>
 </template>
 
@@ -192,20 +211,22 @@ const save_print_receipt = async () => {
     
     if(customer_paid.value < grand_total.value) 
         return data_store.toggleAlert('The amount paid is insufficient.')
-    const res = await init.sendDataToServer('save_receipt','post',{
-        array: item_lists.value,
-        transaction: {
-            total: total.value,
-            discount: discount.value,
-            grand_total: grand_total.value,
-            paid: customer_paid.value,
-            change: customer_paid.value - grand_total.value,
-        }
-    })
+    // const res = await init.sendDataToServer('save_receipt','post',{
+    //     array: item_lists.value,
+    //     transaction: {
+    //         total: total.value,
+    //         discount: discount.value,
+    //         grand_total: grand_total.value,
+    //         paid: customer_paid.value,
+    //         change: customer_paid.value - grand_total.value,
+    //     }
+    // })
 
-    console.log(res);
-    clear()
-    $('#print_receipt').modal('hide')
+    var voucher = document.getElementById("voucher").innerHTML;
+    document.body.innerHTML = voucher;
+    window.print();
+    history.go();
+    alert('You can access to this page later in the sale records page.');
 }
 </script>
 <style scoped>

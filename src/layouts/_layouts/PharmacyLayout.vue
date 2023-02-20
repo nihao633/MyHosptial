@@ -19,9 +19,9 @@
                 <li class="nav-item">
                     <a class="nav-link" :class="{ active: current_tab == 4}" href="javascript:void(0)" @click="current_tab = 4">Inventory</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" :class="{ active: current_tab == 5}" href="javascript:void(0)" @click="current_tab = 5">Export</a>
-                </li>
+                </li> --> <!-- will implement later -->
             </ul>
         </div>
         <div class="col col-md-9 col-lg-10">

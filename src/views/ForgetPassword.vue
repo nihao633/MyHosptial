@@ -14,7 +14,8 @@
                 <span class="text-white badge bg-danger">{{ error_message }}</span>
             </div>
             <div class="mb-3 d-flex">
-                <button class="btn btn-primary ms-auto h-100" type="submit">Request</button>
+                <p class="text-danger" v-if="data_store.content_loading && store.reset_time !== ''"><em><small>Please wait before retrying in {{ store.reset_time }} seconds</small></em></p>
+                <button class="btn btn-primary ms-auto h-100" type="submit" :disabled="data_store.content_loading">Request</button>
             </div>
         </form>
     </div>
@@ -32,7 +33,11 @@ import {
 import {
     onMounted
 } from 'vue';
+import {
+    useDataStore
+} from './../stores/data';
 
+const data_store = useDataStore();
 const store = useAuthStore();
 const {
     email,

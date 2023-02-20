@@ -1,9 +1,10 @@
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 import init from "../helpers/init";
 import { useDataStore } from './data';
 
 export const usePosStore = defineStore('pos_variables',() => {
+    const item_quantity = ref(0)
     const store = useDataStore()
     const generic_names = ref([])
     const drugs = ref([])
@@ -25,6 +26,9 @@ export const usePosStore = defineStore('pos_variables',() => {
     const not_found = ref(false)
     const searching = ref(false)
 
+    const {
+        content_loading
+    } = storeToRefs(store)
     const select_method = val => {
         current_method.value = val
         current_category.value = ''
@@ -49,10 +53,10 @@ export const usePosStore = defineStore('pos_variables',() => {
     const select_brand_name = async val => {
         current_brand_name.value = val
         quantity.value = 0
-        console.log(current_brand_name.value);
     }
 
     const initiate = async (search_string = null) => {
+        content_loading.value = false
         patients.value = []
         const res_patients = search_string !== null ? await init.sendDataToServer('patients?name=' + search_string) : await init.sendDataToServer('patients')
         patients.value = res_patients.data.patients
@@ -88,54 +92,75 @@ export const usePosStore = defineStore('pos_variables',() => {
                 if (drug['Generic Name'] == current_generic_name.value) return drugs.value.push(drug)
             })    
         }
-
-        console.log(drugs.value);
     }
 
     const addToCart = async () => {
+        content_loading.value = true
         if(quantity.value == 0 || quantity.value == '') return store.toggleAlert('Quantity cannot be 0 or empty.')
         if(current_method.value == 'ID' && (typeof(current_id.value) == 'string' || current_id.value == 0 || current_id.value == '')) return store.toggleAlert('ID cannot be string or empty.')
         if(current_method.value == 'Name' && (typeof(current_name.value) == 'number' || current_name.value == '')) return store.toggleAlert('Name cannot contain number or be empty.')
 
-        console.log(current_id.value);
         if (current_id.value !== '') {
+            current_brand_name.value = ''
             drugs.value = []
+            item_quantity.value = 0
             const res = await init.sendDataToServer('drugs')
 
             res.data.drugs.forEach(drug => {
                 if (drug.id == current_id.value) return current_brand_name.value = drug
             })
 
-            if (current_brand_name.value == '') return store.toggleAlert('Item not found with this id number ' + current_id.value)
+            if (current_brand_name.value == '') {
+                content_loading.value = false
+                return store.toggleAlert('Item not found with this id number ' + current_id.value)
+            }
         }
+
+        item_lists.value.map(val=> val.drug.id).indexOf(current_brand_name.value.id) > -1 ? 
+        item_quantity.value = 
+        Number(quantity.value) + Number(item_lists.value[item_lists.value.map(val=> val.drug.id).indexOf(current_brand_name.value.id)].quantity) :
+        item_quantity.value = quantity.value
+
+        console.log(item_quantity.value);
 
         const res = await init.sendDataToServer('purchased_records/price','post',{
             drug_id: current_brand_name.value.id,
-            quantity: quantity.value,
+            quantity: item_quantity.value,
         })
+        if(res?.response?.data.status) {
+            content_loading.value = false
+            return store.toggleAlert(res.response.data.status)
+        }
 
-        if(res?.response?.data.status) return store.toggleAlert(res.response.data.status)
-        console.log(res);
-        item_lists.value.push({
-            drug: current_brand_name.value, 
-            customer: selected_patient.value !== 'Guest' ? selected_patient.value : null, 
-            payment_type: payment_type.value, 
-            item_name: `
-                ${current_brand_name.value['Brand Name']} 
-                (${current_brand_name.value['Generic Name']} 
-                ${current_brand_name.value['Drug Form']} ${current_brand_name.value['Drug Dosage']})
-            `, 
-            quantity: quantity.value, 
-            unit_price: res.data.resale_price, 
-            price: quantity.value * res.data.resale_price, 
-            discount: res.data.discount, 
-            selected_to_clear: false
-        })
-        
         total.value += (quantity.value * res.data.resale_price)
         discount.value += res.data.discount
         grand_total.value += ((quantity.value * res.data.resale_price) - res.data.discount)
-        console.log(item_lists.value);
+
+        content_loading.value = false
+
+        if(item_lists.value.length == 0) {
+            return item_lists.value.push({
+                drug: current_brand_name.value, 
+                customer: selected_patient.value !== 'Guest' ? selected_patient.value : null, 
+                payment_type: payment_type.value, 
+                item_name: `
+                    ${current_brand_name.value['Brand Name']} 
+                    (${current_brand_name.value['Generic Name']} 
+                    ${current_brand_name.value['Drug Form']} ${current_brand_name.value['Drug Dosage']})
+                `, 
+                quantity: quantity.value, 
+                unit_price: res.data.resale_price, 
+                price: quantity.value * res.data.resale_price, 
+                discount: res.data.discount, 
+                selected_to_clear: false
+            })
+        }
+        return item_lists.value.forEach(val => {
+            if(val.drug.id === current_brand_name.value.id) {
+                val.quantity = item_quantity.value
+                val.price = item_quantity.value * val.unit_price
+            }
+        });
     }
 
     const clear = () => {

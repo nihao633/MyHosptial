@@ -24,7 +24,7 @@
         <label class="form-label"><strong class="text-danger">*</strong> Quantity</label>
         <input type="text" class="form-control" placeholder="Type the quantity here" v-model="quantity">
     </div>
-    <button class="btn btn-primary" type="submit">Add</button>
+    <button class="btn btn-primary" type="submit" :disabled="data_store.content_loading">Add</button>
 </form>
 </template>
 <script setup>
@@ -32,7 +32,8 @@ import { usePosStore } from '../../stores/pos';
 import { onMounted } from 'vue';
 import SearchableList from '../_searchable_list.vue';
 import { storeToRefs } from 'pinia';
-
+import { useDataStore } from '../../stores/data';
+const data_store = useDataStore();
 const store = usePosStore();
 const {
     current_method,

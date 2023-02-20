@@ -37,7 +37,6 @@ const initiate = async () => {
     const { auth_user } = storeToRefs(store);
     const res = await sendDataToServer('init');
 
-    console.log(res);
     // back-end server down
     if (res.message === "Network Error") {
         store.toggleAlert("Web server is down."); 

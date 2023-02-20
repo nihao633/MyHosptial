@@ -22,7 +22,7 @@
                 <span class="text-white badge bg-danger">{{ error_message }}</span>
             </div>
             <div class="mb-3 d-flex">
-                <button class="btn btn-primary ms-auto h-100" type="submit">Request</button>
+                <button class="btn btn-primary ms-auto h-100" type="submit">Reset</button>
             </div>
         </form>
     </div>
