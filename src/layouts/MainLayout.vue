@@ -16,6 +16,7 @@
                     </a>
                 </li>
                 <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/settings">Settings</RouterLink></li>
+                <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/reports">Reports</RouterLink></li>
                 <li>
                     <a class="dropdown-item" href="#" @click="logout">Log Out</a>
                 </li>

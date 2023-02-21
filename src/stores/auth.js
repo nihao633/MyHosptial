@@ -145,12 +145,8 @@ export const useAuthStore = defineStore("auth_variables", () => {
         }
 
         // log in success
-        store.toggleAlert("Log in success!!! Redirecting to home page...",true,200)
-        setTimeout(() => {
-            reset()
-            router.push({ name: "home" })
-            return
-        },3000)
+        store.toggleAlert(res.data.message,false,200)
+        return router.push({ name: "home" })
     }
 
     const logout = async () => {
@@ -164,11 +160,8 @@ export const useAuthStore = defineStore("auth_variables", () => {
         }
 
         // log in success
-        store.toggleAlert("Log out success!!! Redirecting to login page...",true,200)
-        setTimeout(() => {
-            router.push({ name: "login" })
-            return
-        },3000)
+        store.toggleAlert(res.data.message,false,200)
+        return router.push({ name: "login" })
     }        
 
     return { 

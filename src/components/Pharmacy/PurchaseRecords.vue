@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import DataTable from './components/_data_table.vue';
+import DataTable from '../_Global_/_data_table.vue';
 import {
     usePharmacyStore
 } from '../../stores/pharmacy';

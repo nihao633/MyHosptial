@@ -144,8 +144,8 @@
 </template>
 
 <script setup>
-import ConfirmDialog from '../ConfirmDialog.vue';
-import Tabs from '../Pharmacy/components/_tabs.vue';
+import ConfirmDialog from '../_Global_/ConfirmDialog.vue';
+import Tabs from '../_Global_/_tabs.vue';
 import {
     storeToRefs
 } from 'pinia';

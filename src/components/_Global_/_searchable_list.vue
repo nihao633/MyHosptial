@@ -15,7 +15,7 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
-import { usePosStore } from '../stores/pos';
+import { usePosStore } from '../../stores/pos';
 
 const store = usePosStore();
 const {

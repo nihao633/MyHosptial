@@ -1,40 +1,43 @@
 <template>
-  <div class="row mx-0 mx-sm-5 d-block d-xl-flex align-items-center custom-login">
-    <div class="col-6">
-        <img src="../assets/images/login_banner.png" class="d-none d-xl-block custom-logo" alt="..." />
-    </div>
-    <div class="col-12 col-lg-8 col-xl-6">
-      <h1>STAFF LOGIN</h1>
-        <form class="form-control my-3" @submit.prevent="login">
-            <div class="mb-3">
-                <label for="email" class="form-label"><strong class="text-danger">*</strong>Email:</label>
-                <input type="email" class="form-control" placeholder="name@example.com" v-model="email" @mousedown="error_message = null">
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label"><strong class="text-danger">*</strong>Password:</label>
-                <input type="password" class="form-control" v-model="password">
-            </div>
-            <div class="mb-3" v-if="error_message">
-                <span class="text-white badge bg-danger">{{ error_message }}</span>
-            </div>
-            <div class="mb-3 d-flex">
-                <div>
-                    <span><small>
-                            <RouterLink to="/forget-password">Forgot your password?</RouterLink></small></span>
-                    <span class="d-block"><small>
-                            <RouterLink to="/register">Not a user? Please register here.</RouterLink></small></span>
-            </div>
-          <button class="btn btn-primary ms-auto h-100" type="submit">Log In</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<AuthLayout :class="'align-items-center'">
+  <ImageCard :image_path="'./src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
+  <FormCard :title="'STAFF LOGIN'" @submit="login">
+    <AuthInput 
+      :required_label="true" 
+      :label="'Email:'" 
+      :type="'email'"
+      :placeholder="'name@example.com'"
+      v-model:input_value="email"
+      :clear_error="()=>{error_message = ''}"
+    />
+    <AuthInput 
+      :required_label="true" 
+      :label="'Password:'"
+      :type="'password'"
+      :error_message="error_message"
+      v-model:input_value="password"
+    />
+    <AuthButtons
+      :has_links="true"
+      :link_one="'/forget-password'"
+      :link_one_description="'Forgot your password?'"
+      :link_two="'/register'"
+      :link_two_description="'Not a user? Please register here.'"
+      :button_name="'Log In'"
+    />
+  </FormCard>
+</AuthLayout>
 </template>
 
 <script setup>
+import AuthLayout from '../layouts/_layouts/AuthLayout.vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { storeToRefs } from 'pinia';
+import ImageCard from '../components/Auth/ImageCard.vue';
+import FormCard from '../components/Auth/FormCard.vue';
+import AuthInput from '../components/Auth/AuthInput.vue';
+import AuthButtons from '../components/Auth/AuthButtons.vue';
 
 const store = useAuthStore();
 const { email,password, error_message } = storeToRefs(store);

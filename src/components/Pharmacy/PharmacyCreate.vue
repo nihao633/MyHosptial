@@ -35,7 +35,7 @@
 
 <script setup>
 import axios from 'axios';
-import SearchableList from '../_searchable_list.vue';
+import SearchableList from '../_Global_/_searchable_list.vue';
 import InputBoxes from './components/_inputbox.vue';
 import {
     usePharmacyStore
@@ -43,7 +43,7 @@ import {
 import {
     storeToRefs
 } from 'pinia';
-import _searchable_list from '../_searchable_list.vue';
+import _searchable_list from '../_Global_/_searchable_list.vue';
 import {
     ref,
     onMounted

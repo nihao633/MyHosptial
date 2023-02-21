@@ -15,7 +15,7 @@ import MainLayout from "./layouts/MainLayout.vue";
 import {
     RouterView
 } from "vue-router";
-import AlertMessage from "./components/AlertMessage.vue";
+import AlertMessage from "./components/_Global_/AlertMessage.vue";
 
 onMounted(async () => {
     await init.sendDataToServer('sanctum/csrf-cookie')

@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import ConfirmDialog from '../ConfirmDialog.vue';
+import ConfirmDialog from '../_Global_/ConfirmDialog.vue';
 import {
     storeToRefs
 } from 'pinia';

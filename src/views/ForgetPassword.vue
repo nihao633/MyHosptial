@@ -1,8 +1,6 @@
 <template>
-<div class="row mx-0 mx-sm-5 d-block d-xl-flex custom-login">
-    <div class="col-6">
-        <img src="../assets/images/login_banner.png" class="d-none d-xl-block custom-logo" alt="..." />
-    </div>
+<AuthLayout>
+    <ImageCard :image_path="'./src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
     <div class="col-12 col-lg-8 col-xl-6 mt-xl-5 pt-xl-5">
         <h3>REQUEST PASSWORD RESET</h3>
         <form class="form-control my-3" @submit.prevent="request_password_reset">
@@ -19,11 +17,12 @@
             </div>
         </form>
     </div>
-</div>
+</AuthLayout>
 </template>
 
-  
 <script setup>
+import ImageCard from '../components/Auth/ImageCard.vue';
+import AuthLayout from '../layouts/_layouts/AuthLayout.vue';
 import {
     useAuthStore
 } from '../stores/auth';

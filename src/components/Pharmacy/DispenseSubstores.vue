@@ -37,7 +37,7 @@
 </div>
 </template>
 <script setup>
-import SearchableList from '../_searchable_list.vue';
+import SearchableList from '../_Global_/_searchable_list.vue';
 import { usePharmacyStore } from '../../stores/pharmacy';
 import { useDataStore } from '../../stores/data';
 import { storeToRefs } from 'pinia';

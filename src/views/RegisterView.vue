@@ -1,8 +1,31 @@
 <template>
-<div class="row my-3 mx-0 mx-sm-5 d-block d-xl-flex">
-    <div class="col-6">
-        <img src="../assets/images/login_banner.png" class="d-none d-xl-block" alt="..." />
-    </div>
+<AuthLayout :class="'my-3'">
+    <ImageCard :image_path="'./src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
+    <FormCard :title="'STAFF REGISTER'" @submit="register">
+        <AuthInput 
+            :required_label="true" 
+            :label="'Email:'" 
+            :type="'email'"
+            :placeholder="'name@example.com'"
+            v-model:input_value="email"
+            :clear_error="()=>{invalid_email_msg = ''}"
+        />
+        <AuthInput 
+            :required_label="true" 
+            :label="'Password:'"
+            :type="'password'"
+            v-model:input_value="password"
+        />
+        <AuthButtons
+            :has_links="true"
+            :link_one="'/forget-password'"
+            :link_one_description="'Forgot your password?'"
+            :link_two="'/register'"
+            :link_two_description="'Not a user? Please register here.'"
+            :button_name="'Log In'"
+        />
+    </FormCard>
+
     <div class="col-12 col-lg-8 col-xl-6">
         <h1>
             STAFF REGISTER
@@ -33,7 +56,7 @@
                     </ul>
                 </li>
             </div>
-            <div class="mb-3" v-if="rank !== 'admin'">
+            <div class="mb-3" v-if="rank !== 'admin' && auth_user !== null ">
                 <label class="form-label" for="rank"><strong class="text-danger">*</strong>Branch</label>
                 <li class="dropdown list-unstyled" v-if="!content_loading">
                     <button type="button" class="dropdown-toggle text-secondary form-control text-start" :class="branch == '' ? 'text-secondary' : 'text-black'" data-bs-toggle="dropdown">
@@ -66,22 +89,42 @@
             </div>
         </form>
     </div>
-</div>
+</AuthLayout>
 </template>
 <script setup>
+import ImageCard from "../components/Auth/ImageCard.vue";
+import AuthLayout from "../layouts/_layouts/AuthLayout.vue";
 import { useDataStore } from "../stores/data";
 import { useRegisterStore } from "../stores/register";
 import { storeToRefs } from "pinia";
 import { onMounted,ref } from "vue";
 import init from "../helpers/init";
+import FormCard from "../components/Auth/FormCard.vue";
+import AuthInput from "../components/Auth/AuthInput.vue";
+import AuthButtons from "../components/Auth/AuthButtons.vue";
 
 const ranks = ['admin','accountant','cashier','doctor','nurse','pharmacist','lab technician','reception']
 const branches = ref([]);
 const store = useRegisterStore();
 const data_store = useDataStore();
-const { email,name,rank,branch,password,password_confirmation,invalid_email_msg,invalid_name_msg,invalid_password_msg } = storeToRefs(store);
-const { register } = store;
-const { content_loading } = storeToRefs(data_store);
+const { 
+    email,
+    name,
+    rank,
+    branch,
+    password,
+    password_confirmation,
+    invalid_email_msg,
+    invalid_name_msg,
+    invalid_password_msg 
+} = storeToRefs(store);
+const { 
+    register
+} = store;
+const { 
+    content_loading,
+    auth_user, 
+} = storeToRefs(data_store);
 
 const select_rank = val => {
     rank.value = val

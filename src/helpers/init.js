@@ -34,18 +34,19 @@ const sendDataToServer = (_url = '',method_type = "get",data = null) => {
 
 const initiate = async () => {    
     const store = useDataStore();
-    const { auth_user } = storeToRefs(store);
+    const { 
+        auth_user,
+        page_loading,
+     } = storeToRefs(store);
+
+    page_loading.value = true // show loading
+
     const res = await sendDataToServer('init');
 
-    // back-end server down
-    if (res.message === "Network Error") {
-        store.toggleAlert("Web server is down."); 
-        return false;
-    }
-    
-    // db server down
-    if (res.data?.db_status === "down") {
-        store.toggleAlert("Database server is down.");
+    page_loading.value = false // hide loading
+
+    // check whether the back-end server or database server is down
+    if (res.message === "Network Error" || res.data?.db_status === "down") {
         return false;
     }
 

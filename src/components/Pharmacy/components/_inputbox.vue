@@ -13,7 +13,7 @@
 </div>
 </template>
 <script setup>
-import SearchableList from '../../_searchable_list.vue';
+import SearchableList from '../../_Global_/_searchable_list.vue';
 
 defineProps({
     array_one: {

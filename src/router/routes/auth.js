@@ -97,6 +97,15 @@ const auth_routes = [
             title: 'Point of Sales'
         }
     },
+    {
+        path: "/transactions",
+        name: "transactions",
+        component: () => import('../../views/TransactionView.vue'),
+        meta: {
+            required_auth: true,
+            title: 'Transactions'
+        }
+    }
 ];
 
 export default auth_routes;

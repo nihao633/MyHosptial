@@ -51,7 +51,7 @@
 import router from '../router/index.js';
 import DateEdit from '../components/Settings/DateEdit.vue';
 import SelectDate from '../components/Settings/SelectDate.vue';
-import ListView from '../components/ListView.vue';
+import ListView from '../components/_Global_/ListView.vue';
 import SubHeader from '../components/Settings/SubHeader.vue';
 import CreateDialog from '../components/Settings/CreateDialog.vue';
 import {
@@ -65,7 +65,7 @@ import {
     ref
 } from 'vue';
 import EditDialog from '../components/Settings/EditDialog.vue';
-import ConfirmDialog from '../components/ConfirmDialog.vue';
+import ConfirmDialog from '../components/_Global_/ConfirmDialog.vue';
 import init from '../helpers/init';
 
 const store = useDataStore();
