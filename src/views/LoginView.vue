@@ -8,7 +8,7 @@
       :type="'email'"
       :placeholder="'name@example.com'"
       v-model:input_value="email"
-      :clear_error="()=>{error_message = ''}"
+      @clear_error="()=>{error_message = ''}"
     />
     <AuthInput 
       :required_label="true" 
@@ -16,6 +16,7 @@
       :type="'password'"
       :error_message="error_message"
       v-model:input_value="password"
+      @clear_error="()=>{error_message = ''}"
     />
     <AuthButtons
       :has_links="true"

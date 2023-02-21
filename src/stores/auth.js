@@ -117,7 +117,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
         // validate if the forms are empty
         if (email.value == null || email.value == '') {
             error_message.value ="Your email cannot be empty.";
-            return store.toggleAlert("Your email cannot be empty."); 
+            return store.toggleAlert(error_message.value); 
         }
 
         // log in
@@ -127,23 +127,16 @@ export const useAuthStore = defineStore("auth_variables", () => {
         })
 
         // log in failed
-        if (res.message == 'Request failed with status code 500') return store.toggleAlert('Unknown Error!!!')
+        if (
+            res.message == 'Request failed with status code 500' ||
+            res.message ==  "Request failed with status code 422" ||
+            res.message ==  "Request failed with status code 401"
+        ) error_message.value = "Your email or password is incorrect."
 
-        if (res.message ==  "Request failed with status code 422") {
-            error_message.value = "Your email or password is incorrect."
-            return store.toggleAlert("Your email or password is incorrect."); 
-        }
+        if (res.data?.errors) error_message.value = res.data.errors.message;
 
-        if (res.message ==  "Request failed with status code 401") {
-            error_message.value = "Your email or password is incorrect."
-            return store.toggleAlert("Your email or password is incorrect."); 
-        }
-
-        if (res.data?.errors) {
-            error_message.value = res.data.errors.message;
-            return store.toggleAlert(res.data.errors.message); 
-        }
-
+        if (error_message.value) return store.toggleAlert(error_message.value)
+        
         // log in success
         store.toggleAlert(res.data.message,false,200)
         return router.push({ name: "home" })
