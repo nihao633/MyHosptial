@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import auth_routes from "./routes/auth";
 import guest_routes from "./routes/guest";
+import routes_404 from "./routes/404";
 import { useDataStore } from "../stores/data";
 import init from "../helpers/init";
 import { storeToRefs } from "pinia";
 import { nextTick } from "vue";
 
-const routes = [...auth_routes,...guest_routes]
+const routes = [...auth_routes,...guest_routes,... routes_404]
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: routes,

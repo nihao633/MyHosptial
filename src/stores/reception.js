@@ -77,7 +77,6 @@ export const useReceptionStore = defineStore('reception_variables',()=>{
             invalid_consultant_name_msg: invalid_consultant_name_msg.value,
         })
 
-        console.log(res);
         // registeration failed
         if (res.data?.error == "duplicate entry") return store.toggleAlert('Patient already exists with the same father\'s name')
         if (res.message == "Request failed with status code 500") return store.toggleAlert('Unknown Error!!!') 
@@ -157,7 +156,6 @@ export const useReceptionStore = defineStore('reception_variables',()=>{
             invalid_consultant_name_msg: invalid_consultant_name_msg.value,
         })
 
-        console.log(res);
         // registeration failed
         if (res.data?.error == "duplicate entry") return store.toggleAlert('Patient already exists with the same father\'s name')
         if (res.message == "Request failed with status code 500") return store.toggleAlert('Unknown Error!!!') 
@@ -226,7 +224,6 @@ export const useReceptionStore = defineStore('reception_variables',()=>{
             invalid_consultant_name_msg: invalid_consultant_name_msg.value,
         })
 
-        console.log(res);
         // registeration failed
         if (res.message == "Request failed with status code 500") return store.toggleAlert('Unknown Error!!!') 
         if (res.response?.data.errors) {
@@ -289,7 +286,6 @@ export const useReceptionStore = defineStore('reception_variables',()=>{
             invalid_consultant_name_msg: invalid_consultant_name_msg.value,
         })
 
-        console.log(res);
         // update failed
         if (res.message == "Request failed with status code 500") return store.toggleAlert('Unknown Error!!!') 
         if (res.response?.data.errors) {

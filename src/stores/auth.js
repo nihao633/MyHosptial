@@ -23,7 +23,6 @@ export const useAuthStore = defineStore("auth_variables", () => {
     
     const reset = (reload = false) => {
         reset_time.value = '';
-        console.log(cookie_exists());
         if(cookie_exists() || reload) {
             reset_time.value = 60
             content_loading.value = true
@@ -97,8 +96,6 @@ export const useAuthStore = defineStore("auth_variables", () => {
             password_confirmation: password_confirmation.value,
         })
 
-        console.log(res);
-
         // reset failed
         if (res.message == 'Request failed with status code 500') return store.toggleAlert('Unknown Error!!!')
 
@@ -128,8 +125,6 @@ export const useAuthStore = defineStore("auth_variables", () => {
             email: email.value,
             password: password.value,
         })
-
-        console.log(res);
 
         // log in failed
         if (res.message == 'Request failed with status code 500') return store.toggleAlert('Unknown Error!!!')

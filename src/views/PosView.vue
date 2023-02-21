@@ -5,7 +5,7 @@
         <ProductSelector />
     </template>
     <template #content_two>
-        <HeaderThree :class="'mb-3'" :title="'Cashier'" :string="data_store.auth_user.name" />
+        <HeaderThree :class="'mb-3'" :title="'Cashier'" :string="data_store.auth_user?.name" />
         <HeaderSix :title="'Customer'" :string="typeof(selected_patient) == 'object' ? selected_patient.name : selected_patient" />
         <HeaderSix :title="'Payment Type'" :string="payment_type" />
         <hr>

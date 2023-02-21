@@ -56,7 +56,6 @@ export const useRegisterStore = defineStore("register_variables", () => {
             password: password.value,
         })
 
-        console.log(res);
         // registeration failed
         if (res.message == 'Request failed with status code 500') return store.toggleAlert('Unknown Error!!!')
         if (res.data?.error == 'You can only create an admin account for a new hospital.') return store.toggleAlert("You aren't logged in. Only admin accounts for new hospitals are allowed.")

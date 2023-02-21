@@ -155,9 +155,6 @@ const edit_values = (key, val) => {
     if (selected_consultant.value !== '') selected_consultant.value[key] = val
     if (selected_branch.value !== '') selected_branch.value[key] = val
 
-    console.log(selected_user.value);
-    console.log(selected_branch.value);
-    console.log(selected_consultant.value);
 }
 
 const update = async () => {
@@ -231,7 +228,6 @@ const destroy = async () => {
     }
 
     if (selected_set_date.value !== '') {
-        console.log(selected_set_date.value);
         const res = await init.sendDataToServer('consultants/delete_date', 'delete',{
             consultant_id:  selected_consultant.value.id,
             date_available: selected_set_date.value.date_available
@@ -256,7 +252,6 @@ const set_create_mode = val => {
 
 const create_data_object = (key, value) => {
     create_value.value[key] = value;
-    console.log(create_value.value);
 }
 
 const create_branch_consultant = async () => {
@@ -299,8 +294,6 @@ const save_dates = async () => {
         dates: set_dates.value,
         consultant_id: selected_consultant.value.id,
     })
-
-    console.log(res);
 
     if (res?.response) return store.toggleAlert(res.response.data.message)
     

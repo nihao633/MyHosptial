@@ -121,8 +121,6 @@ export const usePosStore = defineStore('pos_variables',() => {
         Number(quantity.value) + Number(item_lists.value[item_lists.value.map(val=> val.drug.id).indexOf(current_brand_name.value.id)].quantity) :
         item_quantity.value = quantity.value
 
-        console.log(item_quantity.value);
-
         const res = await init.sendDataToServer('purchased_records/price','post',{
             drug_id: current_brand_name.value.id,
             quantity: item_quantity.value,

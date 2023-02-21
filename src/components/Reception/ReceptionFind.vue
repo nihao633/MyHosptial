@@ -260,7 +260,6 @@ const search_patients = async () => {
         search_location: search_location.value,
     })
 
-    console.log(res);
     loading.value = false
     // success
     if (res.data?.results) {

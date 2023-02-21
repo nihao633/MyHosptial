@@ -50,7 +50,6 @@ export const useOpdStore = defineStore('opd_variables',()=>{
             next_appointment: next_appointment.value
         })
 
-        console.log(res);
         // registeration failed
         if (res.message == "Request failed with status code 500") return store.toggleAlert('Unknown Error!!!') 
 
@@ -61,7 +60,6 @@ export const useOpdStore = defineStore('opd_variables',()=>{
     }
 
     const update_medicord = async () => {
-        console.log(selected_medicord.value);
         const res = await init.sendDataToServer('medicords/update','post',{
             patient_id: selected_medicord.value.patient.id,
             medicord_id: selected_medicord.value.id,
@@ -73,7 +71,6 @@ export const useOpdStore = defineStore('opd_variables',()=>{
             next_appointment: next_appointment.value
         })
 
-        console.log(res);
         // update failed
         if (res.message == "Request failed with status code 500") {
             store.toggleAlert('Unknown Error!!!')
