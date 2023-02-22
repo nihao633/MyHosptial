@@ -26,10 +26,15 @@ router.beforeEach(async (to,from) => {
 
     document.title = 'Loading...'
     
-    const is_server_up = await init.initiate();
+    if(to.name == 'contact' || to.name == 'about') {
+        page_loading.value = false
+        return true
+    }
 
-    if(!is_server_up && to.name !== 'Unavailable') return { name: 'Unavailable' }
-    if(is_server_up && to.name == 'Unavailable') return { name: 'home' }
+    const is_server_up = await init.initiate();
+    
+    if(!is_server_up && to.name !== 'unavailable') return { name: 'unavailable' }
+    if(is_server_up && to.name == 'unavailable') return { name: 'home' }
 
     // already logged in and still trying to access the login page will redirect to the login page
     if (auth_user.value && (to.name == 'login' || to.name == 'forgot_password' || to.name == 'reset_password')) {
@@ -47,7 +52,11 @@ router.beforeEach(async (to,from) => {
                 if (auth_user.value.rank !== 'reception' && to.name == 'reception') invalid_request()
                 if (auth_user.value.rank !== 'doctor' && auth_user.value.rank !== 'nurse' && to.name == 'opd') invalid_request()
                 if (auth_user.value.rank !== 'doctor' && auth_user.value.rank !== 'nurse' && to.name == 'ipd') invalid_request()
+                if (auth_user.value.rank !== 'lab technician' && to.name == 'lab') invalid_request()
+                if (auth_user.value.rank !== 'xray technician' && to.name == 'imaging') invalid_request()
                 if (auth_user.value.rank !== 'pharmacist' && to.name == 'pharmacy') invalid_request()
+                if (auth_user.value.rank !== 'accountant' && auth_user.value.rank !== 'cashier' && to.name == 'pos') invalid_request()
+                if (auth_user.value.rank !== 'accountant' && to.name == 'transactions') invalid_request()
             }
             
             return true

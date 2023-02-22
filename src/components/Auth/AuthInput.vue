@@ -1,14 +1,20 @@
 <template>
-    <div class="mb-3">
-        <label class="form-label"><strong class="text-danger" v-if="required_label">*</strong>{{ label }}</label>
-        <input :type="type" class="form-control" :placeholder="placeholder" :value="input_value" @input="$emit('update:input_value',$event.target.value)" @mousedown="$emit('clear_error')">
-    </div>
-    <div class="mb-3" v-if="error_message">
-        <span class="text-white badge bg-danger">{{ error_message }}</span>
+    <div>
+        <div class="mb-3">
+            <label class="form-label"><strong class="text-danger" v-if="required_label">*</strong>{{ label }}</label>
+            <input :type="type" class="form-control" :placeholder="placeholder" :value="input_value" @input="$emit('update:input_value',$event.target.value)" @mousedown="$emit('clear_error')" :disabled="disabled">
+        </div>
+        <div class="mb-3" v-if="error_message">
+            <span class="text-white badge bg-danger">{{ error_message }}</span>
+        </div>
     </div>
 </template>
 <script setup>
 defineProps({
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
     label: {
         type: String,
         required: true,

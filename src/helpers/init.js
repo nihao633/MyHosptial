@@ -43,7 +43,9 @@ const initiate = async () => {
 
     const res = await sendDataToServer('init');
 
-    page_loading.value = false // hide loading
+    setTimeout(() => {
+        page_loading.value = false // hide loading
+    }, 1000);
 
     // check whether the back-end server or database server is down
     if (res.message === "Network Error" || res.data?.db_status === "down") {

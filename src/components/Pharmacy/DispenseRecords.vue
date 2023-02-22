@@ -1,5 +1,19 @@
 <template>
-<DataTable :disabled_list="['id','from','to']" @begin_edit="begin_edit" @pause_edit="pause_edit" :edit_row="edit_row" @edit_mode_on="edit_mode_on" :searching="searching" :not_found="not_found" @begin_search="begin_search" @pause_search="pause_search" :array="dispense_records" :selected_row="selected_row" @select_row="select_row" v-if="!content_loading" />
+<DataTable 
+    :disabled_list="['id','from','to']" 
+    @begin_edit="begin_edit" 
+    @pause_edit="pause_edit" 
+    :edit_row="edit_row" 
+    @edit_mode_on="edit_mode_on" 
+    :searching="searching" 
+    :not_found="not_found" 
+    @begin_search="begin_search" 
+    @pause_search="pause_search" 
+    :array="dispense_records" 
+    :selected_row="selected_row" 
+    @select_row="select_row" 
+    v-if="!content_loading && dispense_records.length !== 0" 
+/>
 <div class="p-3 text-danger" v-if="!content_loading && dispense_records.length == 0 && searching == null">
     There aren't any drug purchase records to display in the main store.
 </div>

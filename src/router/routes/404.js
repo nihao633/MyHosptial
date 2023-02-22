@@ -10,7 +10,7 @@ const routes_404 = [
     },
     {
         path: "/unavailable",
-        name: 'Unavailable',
+        name: 'unavailable',
         component: () => import('../../views/UnavailableView.vue'),
         meta: {
             required_auth: false,

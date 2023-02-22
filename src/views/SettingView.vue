@@ -98,7 +98,7 @@ const {
 
 onMounted(() => {
     hospital_name.value = auth_user.value ? auth_user.value.setting.hospital_name : 'My Hospital EMRS'
-    theme.value = auth_user.value.setting.theme == 'dark' ? true : false
+    theme.value = auth_user.value ? (auth_user.value.setting.theme == 'dark' ? true : false) : false
     $('#show_dates').on('show.bs.modal', async function() {
         load_consultant_dates()
     })

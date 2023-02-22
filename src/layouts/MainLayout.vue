@@ -9,7 +9,7 @@
             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {{ auth_user.name }}
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu shadow-lg">
                 <li>
                     <a class="dropdown-item disabled" href="javascript:void(0)">
                         {{ auth_user.rank.charAt(0).toUpperCase() + auth_user.rank.slice(1) }}
@@ -29,19 +29,19 @@
         <slot />
     </div>
 </div>
-<div v-if="store.page_loading" class="text-center mt-5">
-    <div class="mt-5 pt-5">
-        <div class="h5">
-            Loading...
-        </div>
-        <div class="spinner-border spinner-border-sm" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <div class="spinner-grow spinner-grow-sm" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <div>
-            <em><small>(Please <a href="/">refresh</a> the browser if server is taking too long to load.)</small></em>
+<div class="modal" id="page_loading">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="background: transparent; border: 0;">
+            <div class="row">
+                <div class="col-6 text-end text-white">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="h5 col text-white">
+                    Loading...
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -59,10 +59,24 @@ import {
     useAuthStore
 } from "../stores/auth";
 import FooterLayout from "./_layouts/FooterLayout.vue";
-import { storeToRefs } from "pinia";
+import { 
+    storeToRefs 
+} from "pinia";
+import {
+    watchEffect,
+    onMounted
+} from 'vue';
 
 const store = useDataStore();
 const auth_store = useAuthStore();
+
+watchEffect(()=>{
+    store.page_loading ? $('#page_loading').modal('show') : $('#page_loading').modal('hide')
+})
+
+onMounted(()=>{
+    $('#page_loading').modal('show')
+})
 
 const { auth_user } = storeToRefs(store);
 const {

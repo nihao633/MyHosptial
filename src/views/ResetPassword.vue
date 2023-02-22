@@ -1,29 +1,34 @@
 <template>
 <AuthLayout>
-    <ImageCard :image_path="'./src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
-    <div class="col-12 col-lg-8 col-xl-6 mt-xl-5 pt-xl-5">
-        <h1>RESET PASSWORD</h1>
-        <form class="form-control my-3" @submit.prevent="reset_password">
-            <div class="mb-3">
-                <label for="email" class="form-label">Your Email:</label>
-                <input type="email" class="form-control" v-model="email" @change=reload() disabled>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label"><strong class="text-danger">*</strong>New Password:</label>
-                <input type="password" class="form-control" placeholder="Type your new password here" v-model="password" @change=reload()>
-            </div>
-            <div class="mb-3">
-                <label for="password_confirmation" class="form-label"><strong class="text-danger">*</strong>Confirm New Password:</label>
-                <input type="password" class="form-control" placeholder="Type your new password here" v-model="password_confirmation" @change=reload()>
-            </div>
-            <div class="mb-3" v-if="error_message">
-                <span class="text-white badge bg-danger">{{ error_message }}</span>
-            </div>
-            <div class="mb-3 d-flex">
-                <button class="btn btn-primary ms-auto h-100" type="submit">Reset</button>
-            </div>
-        </form>
-    </div>
+    <ImageCard :image_path="'../src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
+    <FormCard :class="'mt-xl-5 pt-xl-5'" :title="'RESET PASSWORD'" @submit="reset_password">
+        <AuthInput 
+            :label="'Your Email:'"
+            v-model:input_value="email"
+            @clear_error="reload()"
+            :disabled="true"
+        />
+        <AuthInput 
+            :label="'New Password:'"
+            :required_label="true"
+            v-model:input_value="password"
+            :type="'password'"
+            @clear_error="reload()"
+            :error_message="error_message"
+            :placeholder="'Type your new password here'"
+        />
+        <AuthInput 
+            :label="'Confirm New Password:'"
+            :required_label="true"
+            :type="'password'"
+            v-model:input_value="password_confirmation"
+            @clear_error="reload()"
+            :placeholder="'Type your new password here'"
+        />
+        <AuthButtons 
+            :button_name="'Reset'"
+        />
+    </FormCard>
 </AuthLayout>
 </template>
 
@@ -40,6 +45,9 @@ import {
     onMounted
 } from 'vue';
 import { useRoute } from 'vue-router';
+import FormCard from '../components/Auth/FormCard.vue';
+import AuthInput from '../components/Auth/AuthInput.vue';
+import AuthButtons from '../components/Auth/AuthButtons.vue';
 
 const store = useAuthStore();
 const {
@@ -56,6 +64,7 @@ const {
 const route = useRoute();
 
 const reload = () => {
+    error_message.value = null
     email.value = route.query.email
     token.value = route.query.token
 }

@@ -6,6 +6,7 @@ import router from "../router/index";
 
 export const useAuthStore = defineStore("auth_variables", () => {
     const reset_time = ref('')
+    const timer_id = ref(null)
     const email = ref(null)
     const password = ref(null)
     const password_confirmation = ref(null)
@@ -23,13 +24,14 @@ export const useAuthStore = defineStore("auth_variables", () => {
     
     const reset = (reload = false) => {
         reset_time.value = '';
+        clearInterval(timer_id.value)
         if(cookie_exists() || reload) {
             reset_time.value = 60
             content_loading.value = true
-            let id = setInterval(() => {
+            timer_id.value = setInterval(() => {
                 reset_time.value -= 1
                 if(reset_time.value < 1) {
-                    clearInterval(id)
+                    clearInterval(timer_id.value)
                     reset_time.value = '';
                     document.cookie = `password_reset=true; expires=Thu, 01 Jan 1920 00:00:00 UTC; path=/forget-password;`    
                     return content_loading.value = false
@@ -49,7 +51,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
             return store.toggleAlert("Your email cannot be empty."); 
         }
 
-        // validate if cookie exists
+        // return nothing if cookie exists
         if (cookie_exists()) return;
 
         // loading to disable the request button
@@ -66,12 +68,18 @@ export const useAuthStore = defineStore("auth_variables", () => {
             return store.toggleAlert('Unknown Error!!!')
         }
 
-        if (res?.response) {
-            content_loading.value = false
-            error_message.value = res.response.data.errors.email[0];
-            return store.toggleAlert(res.response.data.errors.email[0]); 
+        // errors
+        if (res.response?.data.errors) {
+            const errors = res.response.data.errors
+
+            Object.keys(errors).forEach(key => {
+                error_message.value = errors[key][0];
+
+                return store.toggleAlert(error_message.value); 
+            });
         }
 
+        // set new cookie
         const date = new Date();
         date.setTime(date.getTime() + 864000)
         document.cookie = `password_reset=true; expires=${date.toUTCString()}; path=/forget-password;`    
@@ -99,18 +107,23 @@ export const useAuthStore = defineStore("auth_variables", () => {
         // reset failed
         if (res.message == 'Request failed with status code 500') return store.toggleAlert('Unknown Error!!!')
 
-        if (res?.response) {
-            error_message.value = res.response.data.errors.email[0];
-            return store.toggleAlert(res.response.data.errors.email[0]); 
+        // errors
+        if (res.response?.data.errors) {
+            const errors = res.response.data.errors
+
+            Object.keys(errors).forEach(key => { 
+                error_message.value = errors[key][0];
+                   
+                return store.toggleAlert(error_message.value); 
+            });
+            
+            return;
         }
 
         // reset success
         store.toggleAlert(res.data.status,false,200)
-        setTimeout(() => {
-            reset()
-            router.push({ name: "login" })
-            return
-        },3000)        
+        reset()
+        return router.push({ name: "login" })
     }
 
     const login = async () => {
@@ -146,13 +159,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
         // log out
         const res = await init.sendDataToServer('logout')
 
-        // log in failed
-        if (res.message === "Request failed with status code 422") {
-            error_message.value ="Your email or password is incorrect.";
-            return store.toggleAlert("Your email or password is incorrect."); 
-        }
-
-        // log in success
+        // log out success
         store.toggleAlert(res.data.message,false,200)
         return router.push({ name: "login" })
     }        

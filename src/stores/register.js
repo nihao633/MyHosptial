@@ -8,11 +8,13 @@ export const useRegisterStore = defineStore("register_variables", () => {
     const email = ref(null)
     const branch = ref('')
     const name = ref(null)
-    const rank = ref('')
+    const rank = ref('reception')
     const password = ref('')
     const password_confirmation = ref('')
     const invalid_email_msg = ref(null)
     const invalid_name_msg = ref(null)
+    const invalid_rank_msg = ref(null)
+    const invalid_branch_msg = ref(null)
     const invalid_password_msg = ref(null)
 
     const reset = () => {
@@ -41,6 +43,16 @@ export const useRegisterStore = defineStore("register_variables", () => {
             return store.toggleAlert("Your name cannot be empty."); 
         }
 
+        if (rank.value == null || rank.value == '') {
+            invalid_rank_msg.value ="Your staff rank cannot be empty.";
+            return store.toggleAlert("Your staff rank cannot be empty."); 
+        }
+
+        if (store.auth_user?.rank == 'admin' && rank.value !== 'admin' && (branch.value == null || branch.value == '')) {
+            invalid_rank_msg.value ="Your staff branch cannot be empty.";
+            return store.toggleAlert("Your staff branch cannot be empty."); 
+        }
+
         if (password.value !== password_confirmation.value || password.value == '' || password_confirmation.value == '') {
             invalid_password_msg.value ="Your passwords do not match.";
             return store.toggleAlert("Your passwords do not match."); 
@@ -56,39 +68,33 @@ export const useRegisterStore = defineStore("register_variables", () => {
             password: password.value,
         })
 
+        console.log(res);
+
         // registeration failed
-        if (res.message == 'Request failed with status code 500') return store.toggleAlert('Unknown Error!!!')
-        if (res.data?.error == 'You can only create an admin account for a new hospital.') return store.toggleAlert("You aren't logged in. Only admin accounts for new hospitals are allowed.")
+        if (res.message == 'Request failed with status code 500') {
+            content_loading.value = false
+            return store.toggleAlert('Unknown Error!!!')
+        }
+
         if (res.response?.data.errors) {
             const errors = res.response.data.errors
 
             Object.keys(errors).forEach(key => {
-                if (key == 'email') {
-                    invalid_email_msg.value =errors[key][0];
-                    return store.toggleAlert(errors[key][0]); 
-                }
-        
-                if (key == 'name') {
-                    invalid_name_msg.value =errors[key][0];
-                    return store.toggleAlert(errors[key][0]); 
-                }
-        
-                if (key == 'password') {
-                    invalid_password_msg.value =errors[key][0];
-                    return store.toggleAlert(errors[key][0]); 
-                }
+                if (key == 'email') invalid_email_msg.value =errors[key][0];
+                if (key == 'name') invalid_name_msg.value =errors[key][0];        
+                if (key == 'password') invalid_password_msg.value =errors[key][0];
+                   
+                return store.toggleAlert(errors[key][0]); 
             });
 
             return;
         }
 
-        // register success
-        store.toggleAlert("Registered!!! Redirecting to home page...",true,200)
-        setTimeout(() => {
-            reset()
-            router.push({ name: "home" })
-            return
-        },3000)
+        // registeration success
+        store.toggleAlert(res.data.status,false,200)
+        reset()
+        router.push({ name: "home" })
+        return
     }     
 
     return { 
@@ -100,6 +106,8 @@ export const useRegisterStore = defineStore("register_variables", () => {
         password_confirmation,
         invalid_email_msg,
         invalid_name_msg,
+        invalid_rank_msg,
+        invalid_branch_msg,
         invalid_password_msg,
         register,
     };

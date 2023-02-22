@@ -32,15 +32,24 @@
 
 <script setup>
 import AuthLayout from '../layouts/_layouts/AuthLayout.vue';
-import { RouterLink } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
-import { storeToRefs } from 'pinia';
+import { 
+  useAuthStore 
+} from '../stores/auth';
+import { 
+  storeToRefs 
+} from 'pinia';
 import ImageCard from '../components/Auth/ImageCard.vue';
 import FormCard from '../components/Auth/FormCard.vue';
 import AuthInput from '../components/Auth/AuthInput.vue';
 import AuthButtons from '../components/Auth/AuthButtons.vue';
 
 const store = useAuthStore();
-const { email,password, error_message } = storeToRefs(store);
-const { login } = store;
+const { 
+  email,
+  password,
+  error_message
+} = storeToRefs(store);
+const { 
+  login 
+} = store;
 </script>

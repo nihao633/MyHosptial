@@ -1,9 +1,9 @@
 <template>
 <li class="dropdown list-unstyled">
-    <button type="button" class="dropdown-toggle form-control text-start text-wrap" :class="class" data-bs-toggle="dropdown">
+    <button type="button" class="dropdown-toggle form-control text-start text-wrap" :class="class" data-bs-toggle="dropdown" :data-bs-target="'#'+select_id">
         {{ selected_val == '' ? placeholder : set_name(selected_val,path)  }}
     </button>
-    <ul id="select_sex" class="dropdown-menu form-control" style="overflow: auto;" :style="array.length > 3 ? 'height:200px;' : ''">
+    <ul :id="select_id" class="dropdown-menu form-control" style="overflow: auto;" :style="array.length > 3 ? 'height:200px;' : ''">
         <input type="text" class="form-control" v-if="searchable" @keydown="pause_search()" @keyup="begin_search($event.target.value)" placeholder="Type here to search">
         <li role="button" class="p-3 custom-select-button" v-if="!not_found && searching && searchable">Searching...</li>
         <li role="button" class="p-3 custom-select-button text-danger" v-if="not_found && !searching && searchable">Not Found</li>
@@ -53,6 +53,10 @@ const set_name = (val,path = null) => {
 }
 
 defineProps({
+    select_id: {
+        type: String,
+        default: 'select_dropdown'
+    },
     searchable: {
         type: Boolean,
         default: false,

@@ -17,8 +17,17 @@ defineProps({
     },
     link_one: {},
     link_one_description: {},
-    link_two: {},
-    link_two_description: {},
-    button_name: {},
+    link_two: {
+        type: String,
+        default: ''
+    },
+    link_two_description: {
+        type: String,
+        default: ''
+    },
+    button_name: {
+        type: String,
+        defautl: 'Submit'
+    },
 })
 </script>

@@ -193,8 +193,9 @@ const selected_patient = ref(null)
 const edit_mode = ref(false)
 const current_section = ref(1)
 
-const reload = async (val) => {
-    current_section.value =val
+const reload = async (val=null) => {
+    if(!val) val = 1
+    current_section.value = val
     loading.value = true
     const res = await init.sendDataToServer('patients');
     const res_appointments = await init.sendDataToServer('patients/appointment');
