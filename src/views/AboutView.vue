@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-dark p-5 mb-3 d-flex align-items-center justify-content-between">
-    <img class="img-thumbnail" width="200" src="./../assets/images/author_photo.jpg" />
+  <div class="bg-dark p-2 p-md-4 mb-3 d-flex align-items-center justify-content-between">
+    <img class="img-thumbnail" src="./../assets/images/author_photo.jpg" />
     <h1 class="text-center text-white">About The Author</h1>
   </div>
   <div>
@@ -20,3 +20,21 @@
     <p><em><small>Disclaimer: If I forgot to mention something creditable that is being used in this project, this is totally an unintended action of me and feel free to contact me for further suggestions at my email mentioned above.</small></em></p>
   </div>
 </template>
+<style scoped>
+.img-thumbnail{
+  width: 30vw;
+}
+
+@media screen and (min-width: 576px) {
+  .img-thumbnail {
+    width: 150px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .img-thumbnail {
+    width: 200px;
+  }
+}
+
+</style>
