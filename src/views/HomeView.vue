@@ -7,56 +7,57 @@
 </div>
 <main class="my-4 d-flex flex-wrap">
     <CardView 
-        :image_path="'./src/assets/images/reception.png'" 
+        :image_path="'/images/reception.png'" 
         :title="'Reception'" 
         :description="'Manage Patient Information and Appointments'"
         :link="'/reception'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'reception')"
     />
     <CardView 
-        :image_path="'./src/assets/images/opd.png'" 
+        :image_path="'/images/opd.png'" 
         :title="'Out Patient Department'" 
         :description="'Manage OPD Patient Records'"
         :link="'/opd'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'doctor' || store.auth_user?.rank == 'nurse')"
     />
     <CardView 
-        :image_path="'./src/assets/images/ipd.png'" 
+        :image_path="'/images/ipd.png'" 
         :title="'Inpatient Department'" 
         :description="'Manage IPD Patient Records'"
         :link="'/ipd'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'doctor' || store.auth_user?.rank == 'nurse')"
     />
     <CardView 
-        :image_path="'./src/assets/images/lab.png'" 
+        :image_path="'/images/lab.png'" 
         :title="'Laboratory'" 
         :description="'Manage Lab Records'"
         :link="'/lab'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'lab technician')"
     />
     <CardView 
-        :image_path="'./src/assets/images/imaging.png'" 
+        :image_path="'/images/imaging.png'" 
         :title="'Imaging Services'" 
         :description="'Manage Imaging Records (E.g. X-ray, Ultrasound)'"
         :link="'/imaging'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'xray technician')"
     />
     <CardView 
-        :image_path="'./src/assets/images/pharmacy.jpg'" 
+        :image_path="'/images/pharmacy.jpg'" 
         :title="'Pharmacy'" 
         :description="'Manage Medical Stocks'"
         :link="'/pharmacy'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'pharmacist')"
     />
     <CardView 
-        :image_path="'./src/assets/images/pos_logo.png'" 
+        :image_path="'/images/pos_logo.png'" 
         :title="'Point of Sales'" 
         :description="'Print and Save Purchase Receipts'"
         :link="'/pos'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'cashier' || store.auth_user?.rank == 'accountant')"
     />
-    <CardView 
-        :image_path="'./src/assets/images/transaction.png'" 
+    <CardView
+        :class="'mb-5 mb-md-0'" 
+        :image_path="'/images/transaction.png'" 
         :title="'Transactions'" 
         :description="'Manage Transactions'"
         :link="'/transactions'"

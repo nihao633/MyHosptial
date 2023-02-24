@@ -3,7 +3,7 @@ import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-const _SERVER_ADDR = "http://localhost:8000/";
+const _SERVER_ADDR = (import.meta.env.MODE == 'production') ? import.meta.env.VITE_SERVER_ADDRESS : import.meta.env.VITE_DEV_SERVER_ADDRESS;
 const current_time = ref('Loading...')
 
 const setCurrentTime = () => {

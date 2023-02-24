@@ -1,6 +1,6 @@
 <template>
   <div class="bg-dark p-2 p-md-4 mb-3 d-flex align-items-center justify-content-between">
-    <img class="img-thumbnail" src="./../assets/images/author_photo.jpg" />
+    <img class="img-thumbnail" src="/images/author_photo.jpg" />
     <h1 class="text-center text-white">About The Author</h1>
   </div>
   <div>

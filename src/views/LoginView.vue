@@ -1,6 +1,6 @@
 <template>
 <AuthLayout :class="'align-items-center'">
-  <ImageCard :image_path="'./src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
+  <ImageCard :image_path="'/images/login_banner.png'" :image_description="'Hospital Logo'" />
   <FormCard :title="'STAFF LOGIN'" @submit="login">
     <AuthInput 
       :required_label="true" 

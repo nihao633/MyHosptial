@@ -1,6 +1,6 @@
 <template>
 <AuthLayout>
-    <ImageCard :image_path="'./src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
+    <ImageCard :image_path="'/images/login_banner.png'" :image_description="'Hospital Logo'" />
     <FormCard :class="'mt-xl-5 pt-xl-5'" :title="'REQUEST PASSWORD RESET'" @submit="request_password_reset">
         <AuthInput 
             :label="'Email:'"

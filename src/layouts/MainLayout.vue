@@ -32,13 +32,13 @@
 <div class="modal" id="page_loading">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content" style="background: transparent; border: 0;">
-            <div class="row">
-                <div class="col-6 text-end text-white">
+            <div class="row align-items-baseline justify-content-center">
+                <div class="col-1 text-end text-white">
                     <div class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <div class="h5 col text-white">
+                <div class="h5 col-2 px-0 text-white">
                     Loading...
                 </div>
             </div>

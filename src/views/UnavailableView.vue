@@ -1,5 +1,5 @@
 <template>
-    <img class="img-thumbnail" src="../assets/images/service_unavailable.png" alt="Service Unavailable Image"/>
+    <img class="img-thumbnail" src="/images/service_unavailable.png" alt="Service Unavailable Image"/>
 </template>
 <style scoped>
 @media only screen and (min-width: 600px) {

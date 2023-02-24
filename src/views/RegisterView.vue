@@ -1,6 +1,6 @@
 <template>
 <AuthLayout :class="'my-3'">
-    <ImageCard :image_path="'./src/assets/images/login_banner.png'" :image_description="'Hospital Logo'" />
+    <ImageCard :image_path="'/images/login_banner.png'" :image_description="'Hospital Logo'" />
     <FormCard :title="'STAFF REGISTER'" @submit="register">
         <AuthInput 
             :required_label="true" 
