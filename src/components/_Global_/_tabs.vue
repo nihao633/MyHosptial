@@ -1,7 +1,9 @@
 <template>
-<div class="mx-auto mb-3 w-50">
-    <button class="btn btn-white border" :class="current_section == 1?  'mytab text-white' : 'shadow'" @click="$emit('reload',1)">{{ tab_one }}</button>
-    <button class="btn btn-white border" :class="current_section == 2?  'mytab text-white' : 'shadow'" @click="$emit('reload',2);">{{ tab_two }}</button>
+<div class="mb-3">
+    <div class="mx-auto" style="width: 220px;">
+        <button class="btn btn-white border" :class="current_section == 1?  'mytab text-white' : 'shadow'" @click="$emit('reload',1)">{{ tab_one }}</button>
+        <button class="btn btn-white border" :class="current_section == 2?  'mytab text-white' : 'shadow'" @click="$emit('reload',2);">{{ tab_two }}</button>
+    </div>
 </div>
 </template>
 

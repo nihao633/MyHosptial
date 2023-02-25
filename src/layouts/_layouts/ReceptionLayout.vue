@@ -22,7 +22,6 @@ const {
     current_tab 
 } = storeToRefs(store);
 const { 
-    reset,
-    reload 
+    reset
 } = store;
 </script>

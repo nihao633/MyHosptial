@@ -1,5 +1,5 @@
 <template>
-<div v-if="alert_message !== null" class="alert fade show fixed-top mx-auto mt-2" :class="alert_status == 200 ? 'alert-success':'alert-danger'" style="width: 55%;">
+<div v-if="alert_message !== null" class="alert fade show fixed-top mx-auto mt-2 text-center" :class="alert_status == 200 ? 'alert-success':'alert-danger'">
     <strong>{{ alert_status == 200 ? 'Success!!!' : 'Error!!!' }}</strong> {{ alert_message }}
     <div class="spinner-border spinner-border-sm" role="status" v-if="alert_loading">
         <span class="visually-hidden">Loading...</span>

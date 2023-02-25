@@ -1,5 +1,5 @@
 <template>
-<TabLayout 
+<TabLayout
     :title="'OPD'"
     :array="[
         'Create',
