@@ -1,5 +1,5 @@
 <template>
-<div class='form-control table-responsive'>
+<div class='form-control table-responsive d-none d-md-block'>
     <table class="table table-bordered ">
         <thead class="custom-bg text-white">
             <tr>
@@ -22,6 +22,9 @@
 
         </tbody>
     </table>
+</div>
+<div class="d-block d-md-none text-center text-danger">
+    Please use a device with a bigger screen to view the data table.
 </div>
 </template>
 
