@@ -1,5 +1,5 @@
 <template>
-<div class="list-group p-2">
+<div class="list-group">
     <a v-if="!loading" v-for="value in array" role="button" @click="$emit('select',value)" class="list-group-item list-group-item-action bg-secondary border-secondary text-white" :class="{ active: selected_value == value}">
         <div v-if="is_date">
             {{ value }}

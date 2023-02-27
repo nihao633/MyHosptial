@@ -17,7 +17,6 @@
 </div>
 </template>
 <script setup>
-import SearchableList from '../../components/_Global_/_searchable_list.vue';
 const props = defineProps({
     title: {
         type: String,

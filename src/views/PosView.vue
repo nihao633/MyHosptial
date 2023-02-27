@@ -137,7 +137,6 @@
 </template>
 
 <script setup>
-import SearchableList from '../components/_Global_/_searchable_list.vue';
 import PosButtons from '../components/POS/PosButtons.vue';
 import HeaderSix from '../components/POS/HeaderSix.vue';
 import HeaderThree from '../components/POS/HeaderThree.vue';

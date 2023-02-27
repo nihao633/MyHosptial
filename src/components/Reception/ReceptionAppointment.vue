@@ -1,19 +1,9 @@
 <template>
 <form @submit.prevent="register" autocomplete="off">
-    <div class="mb-3">
-        <label class="form-label" for="rank"><strong class="text-danger">*</strong>Consultant's Name:</label>
-        <li class="dropdown list-unstyled">
-            <button type="button" class="dropdown-toggle form-control text-start" :class="consultant == '' ? 'text-secondary' : 'text-black'" data-bs-toggle="dropdown">
-                {{ consultant == '' ? "Choose your consultant" : consultant.name }}
-            </button>
-            <ul id="select_consultant" class="dropdown-menu form-control" style="overflow: auto;" :style="consultants?.length > 3 ? 'height:200px;' : ''">
-                <li role="button" class="p-3 custom-select-button" v-for="consultant in consultants" @click="get_dates(consultant)">{{ consultant.name }}</li>
-            </ul>
-        </li>
-    </div>
-    <div class="mb-3" v-if="invalid_consultant_name_msg">
-        <span class="text-white badge bg-danger">{{ invalid_consultant_name_msg }}</span>
-    </div>
+    <ConsultantSelector
+        :class="'mb-3'" 
+        @select="get_dates"
+    />
 
     <div class="mb-3">
         <label for="date_of_visit" class="form-label"><strong class="text-danger">*</strong>Intended Date of Visit:</label>
@@ -80,6 +70,7 @@ import init from '../../helpers/init';
 import {
     useReceptionStore
 } from '../../stores/reception';
+import ConsultantSelector from './components/ConsultantSelector.vue';
 
 const store = useReceptionStore();
 const consultants = ref(null);

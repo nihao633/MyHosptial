@@ -10,7 +10,6 @@
 <script setup>
 import { useDataStore } from '../../stores/data';
 import { ref,onMounted } from 'vue';
-import SearchableList from '../_Global_/_searchable_list.vue';
 
 const store = useDataStore();
 const current_year = ref('');

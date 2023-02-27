@@ -20,11 +20,11 @@
         <span class="input-group-text">Upload Voucher</span>
         <input id="purchased_voucher" type="file" class="form-control">
     </div>
-    <InputBoxes v-if="!drug_name_exists" :label_one="'Brand Name'" :label_two="'Generic Name'" v-model:input_one="brand_name" v-model:input_two="generic_name" />
-    <InputBoxes v-if="!drug_name_exists" :label_one="'Drug Form'" :type_one="'list'" :array_one="['Oral','Injectable','Suppository','Ointment','Eye/Ear Drop','Instrument','Equipment','Others']" :label_two="'Drug Dosage'" v-model:input_one="drug_form" v-model:input_two="drug_dosage" />
+    <InputBox v-if="!drug_name_exists" :label_one="'Brand Name'" :label_two="'Generic Name'" v-model:input_one="brand_name" v-model:input_two="generic_name" />
+    <InputBox v-if="!drug_name_exists" :label_one="'Drug Form'" :type_one="'list'" :array_one="['Oral','Injectable','Suppository','Ointment','Eye/Ear Drop','Instrument','Equipment','Others']" :label_two="'Drug Dosage'" v-model:input_one="drug_form" v-model:input_two="drug_dosage" />
     <SearchableList :path="['Brand Name','Generic Name','Drug Form','Drug Dosage']" :array="drugs" :selected_val="selected_drug" @select="select_drug" :class="'mb-3'" v-else />
-    <InputBoxes :type_one="'date'" :label_one="'Date of Purchase'" :label_two="'Purchased Price'" v-model:input_one="purchased_date" v-model:input_two="purchased_price" />
-    <InputBoxes :type_two="'date'" :label_one="'Purchased Quantity'" :label_two="'Expiry date'" v-model:input_one="purchased_quantity" v-model:input_two="expiry_date" />
+    <InputBox :type_one="'date'" :label_one="'Date of Purchase'" :label_two="'Purchased Price'" v-model:input_one="purchased_date" v-model:input_two="purchased_price" />
+    <InputBox :type_two="'date'" :label_one="'Purchased Quantity'" :label_two="'Expiry date'" v-model:input_one="purchased_quantity" v-model:input_two="expiry_date" />
     <div class="d-flex mb-3">
         <button class="btn btn-primary ms-auto" type="submit">
             Create
@@ -35,8 +35,6 @@
 
 <script setup>
 import axios from 'axios';
-import SearchableList from '../_Global_/_searchable_list.vue';
-import InputBoxes from './components/_inputbox.vue';
 import {
     usePharmacyStore
 } from '../../stores/pharmacy';

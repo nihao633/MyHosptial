@@ -15,6 +15,7 @@
       :label="'Password:'"
       :type="'password'"
       :error_message="error_message"
+      :placeholder="'Type your password here'"
       v-model:input_value="password"
       @clear_error="()=>{error_message = ''}"
     />
@@ -40,7 +41,7 @@ import {
 } from 'pinia';
 import ImageCard from '../components/Auth/ImageCard.vue';
 import FormCard from '../components/Auth/FormCard.vue';
-import AuthInput from '../components/Auth/AuthInput.vue';
+import AuthInput from '../components/_Global_/InputBox.vue';
 import AuthButtons from '../components/Auth/AuthButtons.vue';
 
 const store = useAuthStore();

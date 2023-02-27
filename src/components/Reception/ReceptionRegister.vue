@@ -1,57 +1,54 @@
 <template>
     <form @submit.prevent="register()" autocomplete="off" class="mb-5 pb-5">
     <input autocomplete="false" name="hidden" type="text" style="display:none;">
-    <div class="mb-3">
-        <label class="form-label" for="rank"><strong class="text-danger">*</strong>Consultant's Name:</label>
-        <li class="dropdown list-unstyled">
-            <button class="dropdown-toggle form-control text-start" :class="consultant == '' ? 'text-secondary' : 'text-black'" data-bs-toggle="dropdown">
-                {{ consultant == '' ? "Choose your consultant" : consultant.name }}
-            </button>
-            <ul id="select_consultant" class="dropdown-menu form-control" style="overflow: auto;" :style="consultants?.length > 3 ? 'height:200px;' : ''">
-                <li role="button" class="p-3 custom-select-button" v-for="consultant in consultants" @click="get_dates(consultant)">{{ consultant.name }}</li>
-            </ul>
-        </li>
-    </div>
-    <div class="mb-3" v-if="invalid_consultant_name_msg">
-        <span class="text-white badge bg-danger">{{ invalid_consultant_name_msg }}</span>
-    </div>
-    <div class="mb-3">
-        <label for="date_of_visit" class="form-label"><strong class="text-danger">*</strong>Date of Visit:</label>
-        <input type="text" v-model="date_of_visit" placeholder="Select Your Date of Visit" id="visit_date_picker" class="form-control" name="date_of_visit" @click="validate()" @change="validate()" @mousedown="invalid_date_of_visit_msg = null">
-    </div>
-    <div class="mb-3" v-if="invalid_date_of_visit_msg">
-        <span class="text-white badge bg-danger">{{ invalid_date_of_visit_msg }}</span>
-    </div>
+    <ConsultantSelector 
+        :class="'mb-3'"
+        @select="get_dates"
+    />
+    <InputBox 
+        :class="'mb-3'"
+        :placeholder="'Select Your Date of Visit'"
+        :label="'Date of Visit:'"
+        :required_label="true"
+        v-model:input_value="date_of_visit"
+        :error_message="invalid_date_of_visit_msg"
+        @clear_error="()=>{invalid_date_of_visit_msg=null}"
+    />
     <div class="mb-3">
         <label class="form-label" for="visit_type"><strong class="text-danger">*</strong>Visit Type:</label>
-        <li class="dropdown list-unstyled">
-            <button type="button" class="dropdown-toggle form-control text-start" :class="visit_type == '' ? 'text-secondary' : 'text-black'" data-bs-toggle="dropdown">
-                {{ visit_type == '' ? "Choose your visit type" : visit_type.toUpperCase() }}
-            </button>
-            <ul id="select_visit_type" class="dropdown-menu form-control">
-                <li role="button" class="p-3 custom-select-button" v-for="val in ['opd','ipd','lab','imaging']" @click="select_visit_type(val)">{{ val.toUpperCase() }}</li>
-            </ul>
-        </li>
+        <SearchableList 
+            :class="'mb-3'"
+            :array="['opd','ipd','lab','imaging']"
+            @select="select_visit_type"
+            :selected_val="visit_type"
+            :error_message="invalid_visit_type_msg"
+            @clear_error="()=>{invalid_visit_type_msg = null}"
+        />
     </div>
-    <div class="mb-3" v-if="invalid_visit_type_msg">
-        <span class="text-white badge bg-danger">{{ invalid_visit_type_msg }}</span>
-    </div>
-    <div class="mb-3">
-        <label for="name" class="form-label"><strong class="text-danger">*</strong>Patient's Name:</label>
-        <input type="text" class="form-control" name="name" placeholder="e.g. John Smith" v-model="name" @mousedown="invalid_name_msg = null">
-    </div>
-    <div class="mb-3" v-if="invalid_name_msg">
-        <span class="text-white badge bg-danger">{{ invalid_name_msg }}</span>
-    </div>
-    <div class="mb-3">
-        <label for="age" class="form-label"><strong class="text-danger">*</strong>Age (years):</label>
-        <input type="text" class="form-control" name="age" placeholder="e.g. 18" v-model="age" @mousedown="invalid_age_msg = null">
-    </div>
-    <div class="mb-3" v-if="invalid_age_msg">
-        <span class="text-white badge bg-danger">{{ invalid_age_msg }}</span>
-    </div>
+    <InputBox 
+        :label="'Patient\'s Name:'"
+        :required_label="true"
+        :placeholder="'e.g. John Smith'"
+        v-model:input_value="name"
+        :error_message="invalid_name_msg"
+        @clear_error="()=>{invalid_name_msg=null}"
+    />
+    <InputBox 
+        :label="'Age (years):'"
+        :required_label="true"
+        :placeholder="'e.g. 18'"
+        v-model:input_value="age"
+        :error_message="invalid_age_msg"
+        @clear_error="()=>{invalid_age_msg=null}"
+    />
     <div class="mb-3">
         <label class="form-label" for="rank"><strong class="text-danger">*</strong>Sex:</label>
+        <SearchableList 
+            :array="['male','female']"
+            :selected_val="sex"
+            :placeholder="'Choose your patient\'s sex'"
+            @select="select_sex"
+        />
         <li class="dropdown list-unstyled">
             <button type="button" class="dropdown-toggle form-control text-start" :class="sex == '' ? 'text-secondary' : 'text-black'" data-bs-toggle="dropdown">
                 {{ sex == '' ? "Choose your patient's sex" : sex.charAt(0).toUpperCase() + sex.slice(1) }}
@@ -90,20 +87,16 @@
 </template>
 
 <script setup>
+import ConsultantSelector from './components/ConsultantSelector.vue';
 import {
     storeToRefs
 } from 'pinia';
-import {
-    onMounted,
-    ref
-} from 'vue';
 import init from '../../helpers/init';
 import {
     useReceptionStore
 } from '../../stores/reception';
 
 const store = useReceptionStore();
-const consultants = ref(null);
 let available_dates = [];
 const {
     date_of_visit,
@@ -182,9 +175,4 @@ const select_sex = val => {
     $('#select_sex').dropdown('toggle')
 }
 
-onMounted(async () => {
-    const res = await init.sendDataToServer('consultants')
-
-    consultants.value = res.data?.consultants
-})
 </script>

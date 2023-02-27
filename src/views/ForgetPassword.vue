@@ -36,7 +36,7 @@ import {
     useDataStore
 } from './../stores/data';
 import FormCard from '../components/Auth/FormCard.vue';
-import AuthInput from '../components/Auth/AuthInput.vue';
+import AuthInput from '../components/_Global_/InputBox.vue';
 
 const data_store = useDataStore();
 const store = useAuthStore();

@@ -46,7 +46,7 @@ import {
 } from 'vue';
 import { useRoute } from 'vue-router';
 import FormCard from '../components/Auth/FormCard.vue';
-import AuthInput from '../components/Auth/AuthInput.vue';
+import AuthInput from '../components/_Global_/InputBox.vue';
 import AuthButtons from '../components/Auth/AuthButtons.vue';
 
 const store = useAuthStore();

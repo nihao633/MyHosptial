@@ -73,7 +73,6 @@
 </AuthLayout>
 </template>
 <script setup>
-import SearchableList from "../components/_Global_/_searchable_list.vue";
 import ImageCard from "../components/Auth/ImageCard.vue";
 import AuthLayout from "../layouts/_layouts/AuthLayout.vue";
 import { 
@@ -91,7 +90,7 @@ import {
  } from "vue";
 import init from "../helpers/init";
 import FormCard from "../components/Auth/FormCard.vue";
-import AuthInput from "../components/Auth/AuthInput.vue";
+import AuthInput from "../components/_Global_/InputBox.vue";
 import AuthButtons from "../components/Auth/AuthButtons.vue";
 
 const ranks = [

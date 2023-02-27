@@ -27,14 +27,14 @@
             <CreateDialog @create="create_branch_consultant" @input_data="create_data_object" :title="create_mode == 'branch' ? 'Create A New Branch' : 'Create A New Consultant'" :array="create_mode == 'branch' ? ['name','level','phone_number','address'] : ['name','speciality','designation']" />
         </div>
     </div>
-    <div class="col-12 col-lg-8 col-xl-6 mx-auto">
+    <div class="col-12 col-lg-8 col-xl-6 mx-auto mb-5 mb-xl-0">
         <div class="form-control setting-box pt-4 shadow">
             <SubHeader :route_path="'/register'" :title="'Users:'" :button_name="'Add User'">
-                <ListView :style="'height: 165px; overflow: auto;'" :loading="user_loading" :array="users" :selected_value="selected_user" @select="select_user" :disabled_edit=true />
+                <ListView :style="'height: 167px; overflow: auto;'" :loading="user_loading" :array="users" :selected_value="selected_user" @select="select_user" :disabled_edit=true />
             </SubHeader>
             <hr>
             <SubHeader @create_mode="set_create_mode" :route_path="'#create_dialog'" :title="'Branches:'" :button_name="'Add Branch'">
-                <ListView :style="'height: 165px; overflow: auto;'" :loading="branch_loading" :array="branches" :selected_value="selected_branch" @select="select_branch" @edit_on="edit_on" />
+                <ListView :style="'height: 167px; overflow: auto;'" :loading="branch_loading" :array="branches" :selected_value="selected_branch" @select="select_branch" @edit_on="edit_on" />
             </SubHeader>
         </div>
     </div>
