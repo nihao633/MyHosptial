@@ -45,6 +45,48 @@
         </div>
     </div>
 </div>
+<div class="modal" id="service_unavailable">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="background: transparent; border: 0;">
+            <div class="row align-items-baseline justify-content-center">
+                <UnavailableView />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="disconnected">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="background: transparent; border: 0;">
+            <div class="row align-items-baseline justify-content-center">
+                <div class="toast show px-0">
+                    <div class="toast-header text-white shadow bg-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <strong class="me-auto">Oops!!!</strong>
+                        <small>{{ auth_user?.setting.hospital_name }}</small>
+                    </div>
+                    <div class="toast-body shadow bg-white rounded-bottom">
+                    Your internet connection is lost.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
+  <div id="is_online" class="toast hide" data-bs-autohide="true" data-bs-delay="10000">
+    <div class="toast-header text-white shadow bg-success">
+        <i class="fa-solid fa-wifi me-2"></i>
+        <strong class="me-auto">Hurray!!!</strong>
+        <small>{{ auth_user?.setting.hospital_name }}</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body shadow">
+      Your internet connection is restored.
+    </div>
+  </div>
+</div>
 <FooterLayout :auth_user="auth_user" />
 </template>
 
@@ -64,18 +106,44 @@ import {
 } from "pinia";
 import {
     watchEffect,
-    onMounted
+    onMounted,
+    ref
 } from 'vue';
+import UnavailableView from "../views/UnavailableView.vue";
+import init from "../helpers/init";
 
+const net_msg_shown = ref(true)
+const timer_id = ref(0);
 const store = useDataStore();
 const auth_store = useAuthStore();
 
 watchEffect(()=>{
     store.page_loading ? $('#page_loading').modal('show') : $('#page_loading').modal('hide')
+    init.is_server_up.value ? $('#service_unavailable').modal('hide') : $('#service_unavailable').modal('show')
+    if(window.navigator.onLine) {
+        $('#disconnected').modal('hide')
+        if(!net_msg_shown.value){
+            $('#is_online').toast('show')
+            net_msg_shown.value = true
+        }
+    } 
+    
+    if(!window.navigator.onLine) {
+        $('#disconnected').modal('show')
+        net_msg_shown.value = false
+    }
 })
+
+const check_servers = async () => {
+    await init.initiate(true)
+}
 
 onMounted(()=>{
     $('#page_loading').modal('show')
+    clearInterval(timer_id.value)
+    timer_id.value = setInterval(()=>{
+        check_servers()
+    },2000)
 })
 
 const { auth_user } = storeToRefs(store);

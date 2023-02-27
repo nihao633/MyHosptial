@@ -5,6 +5,7 @@ import { ref } from "vue";
 
 const _SERVER_ADDR = (import.meta.env.MODE == 'production') ? import.meta.env.VITE_SERVER_ADDRESS : import.meta.env.VITE_DEV_SERVER_ADDRESS;
 const current_time = ref('Loading...')
+const is_server_up = ref(true)
 
 const setCurrentTime = () => {
     let date = new Date()
@@ -32,7 +33,7 @@ const sendDataToServer = (_url = '',method_type = "get",data = null) => {
     return res
 }
 
-const initiate = async () => {    
+const initiate = async (check_only = true) => {    
     const store = useDataStore();
     const { 
         auth_user,
@@ -40,20 +41,27 @@ const initiate = async () => {
      } = storeToRefs(store);
 
     page_loading.value = true // show loading
+    if(check_only) page_loading.value = false
 
     const res = await sendDataToServer('init');
 
     setTimeout(() => {
         page_loading.value = false // hide loading
-    }, 1000);
+    }, 2000);
 
     // check whether the back-end server or database server is down
     if (res.message === "Network Error" || res.data?.db_status === "down") {
-        return false;
+        return is_server_up.value = false;
     }
 
     auth_user.value = res.data.auth_user
-    return true;
+    return is_server_up.value = true;
 };
 
-export default { initiate, sendDataToServer, setCurrentTimeTimer, current_time };
+export default { 
+    initiate, 
+    sendDataToServer, 
+    setCurrentTimeTimer, 
+    current_time,
+    is_server_up 
+};

@@ -31,11 +31,10 @@ router.beforeEach(async (to,from) => {
         return true
     }
 
-    const is_server_up = await init.initiate();
+    await init.initiate();
     
-    if(!is_server_up && to.name !== 'unavailable') return { name: 'unavailable' }
-    if(is_server_up && to.name == 'unavailable') return { name: 'home' }
-
+    if(!init.is_server_up.value) return;
+    
     // already logged in and still trying to access the login page will redirect to the login page
     if (auth_user.value && (to.name == 'login' || to.name == 'forgot_password' || to.name == 'reset_password')) {
         return router.push({ name: "home" })            

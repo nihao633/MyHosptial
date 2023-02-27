@@ -8,15 +8,6 @@ const routes_404 = [
             title: '404 | Not Found'
         }
     },
-    {
-        path: "/unavailable",
-        name: 'unavailable',
-        component: () => import('../../views/UnavailableView.vue'),
-        meta: {
-            required_auth: false,
-            title: '503 | Unavailable'
-        }
-    }
 ]
 
 export default routes_404
