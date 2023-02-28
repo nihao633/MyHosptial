@@ -73,8 +73,10 @@ router.afterEach((to,from)=>{
     } = storeToRefs(store)
 
     nextTick(()=>{
-        document.title = to.meta.title || 'My Hospital EMRS'
-        page_loading.value = false
+        setTimeout(() => {
+            document.title = to.meta.title || 'My Hospital EMRS'
+            page_loading.value = false
+        }, 2000);
     })
 })
 

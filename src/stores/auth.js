@@ -162,7 +162,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
 
         // log out success
         store.toggleAlert(res.data.message,false,200)
-        return window.location.href = "/login"
+        return router.push({ name: "login" })
     }        
 
     return { 
