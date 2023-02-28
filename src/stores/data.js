@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import init from '../helpers/init'
 
 export const useDataStore = defineStore("global_variables", () => {
-    const setting_udpate_key = ref(0)
+    const setting_update_key = ref(0)
     const content_loading = ref(false);
     const page_loading = ref(true);
     const alert_loading = ref(false);
@@ -147,6 +147,6 @@ export const useDataStore = defineStore("global_variables", () => {
         user_loading,
         branch_loading,
         consultant_dates,
-        setting_udpate_key
+        setting_update_key
     };
 });

@@ -6,7 +6,7 @@ import router from "../router/index";
 
 export const useAuthStore = defineStore("auth_variables", () => {
     const reset_time = ref('')
-    const timer_id = ref(null)
+    const timer_id = ref(0)
     const email = ref(null)
     const password = ref(null)
     const password_confirmation = ref(null)
@@ -14,7 +14,6 @@ export const useAuthStore = defineStore("auth_variables", () => {
     const error_message = ref(null)
     const store = useDataStore()
     const {
-        auth_user,
         content_loading,
     } = storeToRefs(store)
 
@@ -128,6 +127,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
     }
 
     const login = async () => {
+        clearInterval(timer_id.value)
         // validate if the forms are empty
         if (email.value == null || email.value == '') {
             error_message.value ="Your email cannot be empty.";
@@ -157,6 +157,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
     }
 
     const logout = async () => {
+        clearInterval(timer_id.value)
         // log out
         const res = await init.sendDataToServer('logout')
 
@@ -172,6 +173,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
         token,
         error_message,
         reset_time,
+        timer_id,
         login,
         logout,
         reset,

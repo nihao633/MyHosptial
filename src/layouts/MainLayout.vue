@@ -117,14 +117,15 @@ import {
 import UnavailableView from "../views/UnavailableView.vue";
 import init from "../helpers/init";
 
-const net_msg_shown = ref(true)
+const net_msg_shown = ref(true);
+const is_online = ref(true);
 const timer_id = ref(0);
 const store = useDataStore();
 const auth_store = useAuthStore();
 
 watchEffect(()=>{
     store.page_loading ? $('#page_loading').modal('show') : $('#page_loading').modal('hide')
-    if(window.navigator.onLine) {
+    if(is_online.value) {
         init.is_server_up.value ? $('#service_unavailable').modal('hide') : $('#service_unavailable').modal('show')
         $('#disconnected').modal('hide')
         if(!net_msg_shown.value){
@@ -133,7 +134,7 @@ watchEffect(()=>{
         }
     } 
     
-    if(!window.navigator.onLine) {
+    if(!is_online.value) {
         $('#disconnected').modal('show')
         $('#service_unavailable').modal('hide')
         net_msg_shown.value = false
@@ -142,6 +143,8 @@ watchEffect(()=>{
 
 onMounted(()=>{
     $('#page_loading').modal('show')
+    window.addEventListener('online',()=>is_online.value=true)
+    window.addEventListener('offline',()=>is_online.value=false)
     clearInterval(timer_id.value)
     timer_id.value = setInterval(()=>{
         init.initiate()
