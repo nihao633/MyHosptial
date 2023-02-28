@@ -24,6 +24,7 @@ router.beforeEach(async (to,from) => {
     const store = useDataStore()
     const { auth_user, page_loading } = storeToRefs(store)
 
+    page_loading.value = true
     document.title = 'Loading...'
     
     if(to.name == 'contact' || to.name == 'about') {
@@ -32,9 +33,7 @@ router.beforeEach(async (to,from) => {
     }
 
     await init.initiate();
-    
-    if(!init.is_server_up.value) return;
-    
+        
     // already logged in and still trying to access the login page will redirect to the login page
     if (auth_user.value && (to.name == 'login' || to.name == 'forgot_password' || to.name == 'reset_password')) {
         return router.push({ name: "home" })            
@@ -68,8 +67,14 @@ router.beforeEach(async (to,from) => {
 })
 
 router.afterEach((to,from)=>{
+    const store = useDataStore()
+    const {
+        page_loading
+    } = storeToRefs(store)
+
     nextTick(()=>{
         document.title = to.meta.title || 'My Hospital EMRS'
+        page_loading.value = false
     })
 })
 

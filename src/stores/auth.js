@@ -14,6 +14,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
     const error_message = ref(null)
     const store = useDataStore()
     const {
+        auth_user,
         content_loading,
     } = storeToRefs(store)
 
@@ -161,7 +162,7 @@ export const useAuthStore = defineStore("auth_variables", () => {
 
         // log out success
         store.toggleAlert(res.data.message,false,200)
-        return router.push({ name: "login" })
+        return window.location.href = "/login"
     }        
 
     return { 

@@ -5,11 +5,11 @@
     </button>
     <ul :id="select_id" class="dropdown-menu form-control" style="overflow: auto;" :style="array.length > 3 ? 'height:200px;' : ''">
         <input type="text" class="form-control" v-if="searchable" @keydown="pause_search()" @keyup="begin_search($event.target.value)" placeholder="Type here to search">
-        <li role="button" class="p-3 custom-select-button" v-if="!not_found && searching == null">Empty</li>
+        <li role="button" class="p-3 custom-select-button" v-if="!not_found && searching == null && array.length == 0">Empty</li>
         <li role="button" class="p-3 custom-select-button" v-if="!not_found && searching && searchable">Searching...</li>
         <li role="button" class="p-3 custom-select-button text-danger" v-if="not_found && !searching && searching !== null && searchable">Not Found</li>
         <li class="p-3 custom-select-button" v-if="array.length == 0 && searching !== null">Loading...</li>
-        <li role="button" class="p-3 custom-select-button" v-if="!searching" v-for="val in array" @click="$emit('select',val)">{{ set_name(val,path) }}</li>
+        <li role="button" class="p-3 custom-select-button" :class="{ active: selected_val == val }" v-if="!searching" v-for="val in array" @click="$emit('select',val)">{{ set_name(val,path) }}</li>
     </ul>
 </li>
 </template>
@@ -83,3 +83,9 @@ defineProps({
 })
 const emit = defineEmits(['select','search'])
 </script>
+<style scoped>
+.active {
+    background-color: #1d92cf !important;
+    color: white;
+}
+</style>

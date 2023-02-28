@@ -88,7 +88,8 @@ const {
     user_loading,
     branch_loading,
     set_dates,
-    consultant_dates
+    consultant_dates,
+    setting_udpate_key
 } = storeToRefs(store);
 
 const {
@@ -302,12 +303,12 @@ const save_dates = async () => {
 }
 
 const save_settings = async () => {
-    const res = await init.sendDataToServer('users/settings', 'post', {
+    await init.sendDataToServer('users/settings', 'post', {
         hospital_name: hospital_name.value,
         theme: theme.value
-    })  
-
-    router.go(0)   
+    })
+    
+    setting_update_key.value += 1
 }
 </script>
 

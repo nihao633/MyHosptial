@@ -64,6 +64,7 @@
             @clear_error="()=>{invalid_password_msg = ''}"
         />
         <AuthButtons
+            :class="'align-items-center'"
             :has_links="true"
             :link_one="'/login'"
             :link_one_description="`Already registered? Please sign in here.`"

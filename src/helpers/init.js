@@ -33,29 +33,27 @@ const sendDataToServer = (_url = '',method_type = "get",data = null) => {
     return res
 }
 
-const initiate = async (check_only = true) => {    
+const check_server_response = async () => {
     const store = useDataStore();
     const { 
         auth_user,
-        page_loading,
      } = storeToRefs(store);
-
-    page_loading.value = true // show loading
-    if(check_only) page_loading.value = false
 
     const res = await sendDataToServer('init');
 
-    setTimeout(() => {
-        page_loading.value = false // hide loading
-    }, 2000);
-
     // check whether the back-end server or database server is down
     if (res.message === "Network Error" || res.data?.db_status === "down") {
-        return is_server_up.value = false;
+        return false;
     }
 
     auth_user.value = res.data.auth_user
-    return is_server_up.value = true;
+    return true;
+}
+
+const initiate = async () => {    
+    is_server_up.value = await check_server_response()
+
+    return is_server_up;
 };
 
 export default { 

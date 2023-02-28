@@ -1,18 +1,20 @@
 <template>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top custom-bg shadow">
-    <div class="container">
+    <div class="container" :key="setting_update_key">
         <RouterLink class="navbar-brand custom-text-color" to="/">
             <i class="fa-solid fa-book-medical"></i>
             {{ auth_user ? auth_user.setting.hospital_name : 'My Hospital EMRS' }}
         </RouterLink>
         <li class="nav-item dropdown list-unstyled" v-if="!store.page_loading && store.auth_user">
             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ auth_user.name }}
+                <i class="fa-solid fa-user d-lg-none"></i>
+                <span class="d-none d-lg-inline">{{ auth_user.name }}</span>
             </a>
-            <ul class="dropdown-menu shadow-lg">
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg">
                 <li>
                     <a class="dropdown-item disabled" href="javascript:void(0)">
                         {{ auth_user.rank.charAt(0).toUpperCase() + auth_user.rank.slice(1) }}
+                        <span class="d-block d-lg-none"><small><em>({{ auth_user.name }})</em></small></span>
                     </a>
                 </li>
                 <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/settings">Settings</RouterLink></li>
@@ -40,6 +42,9 @@
                 </div>
                 <div class="h5 col-2 px-0 text-white">
                     Loading...
+                </div>
+                <div class="text-center">
+                    <img src="/images/loading.gif"/>
                 </div>
             </div>
         </div>
@@ -119,8 +124,8 @@ const auth_store = useAuthStore();
 
 watchEffect(()=>{
     store.page_loading ? $('#page_loading').modal('show') : $('#page_loading').modal('hide')
-    init.is_server_up.value ? $('#service_unavailable').modal('hide') : $('#service_unavailable').modal('show')
     if(window.navigator.onLine) {
+        init.is_server_up.value ? $('#service_unavailable').modal('hide') : $('#service_unavailable').modal('show')
         $('#disconnected').modal('hide')
         if(!net_msg_shown.value){
             $('#is_online').toast('show')
@@ -130,23 +135,23 @@ watchEffect(()=>{
     
     if(!window.navigator.onLine) {
         $('#disconnected').modal('show')
+        $('#service_unavailable').modal('hide')
         net_msg_shown.value = false
     }
 })
-
-const check_servers = async () => {
-    await init.initiate(true)
-}
 
 onMounted(()=>{
     $('#page_loading').modal('show')
     clearInterval(timer_id.value)
     timer_id.value = setInterval(()=>{
-        check_servers()
+        init.initiate()
     },2000)
 })
 
-const { auth_user } = storeToRefs(store);
+const { 
+    auth_user,
+    setting_update_key 
+} = storeToRefs(store);
 const {
     logout
 } = auth_store;

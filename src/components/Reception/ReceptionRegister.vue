@@ -49,14 +49,6 @@
             :placeholder="'Choose your patient\'s sex'"
             @select="select_sex"
         />
-        <li class="dropdown list-unstyled">
-            <button type="button" class="dropdown-toggle form-control text-start" :class="sex == '' ? 'text-secondary' : 'text-black'" data-bs-toggle="dropdown">
-                {{ sex == '' ? "Choose your patient's sex" : sex.charAt(0).toUpperCase() + sex.slice(1) }}
-            </button>
-            <ul id="select_sex" class="dropdown-menu form-control">
-                <li role="button" class="p-3 custom-select-button" v-for="val in ['male','female']" @click="select_sex(val)">{{ val.charAt(0).toUpperCase() + val.slice(1) }}</li>
-            </ul>
-        </li>
     </div>
     <div class="mb-3" v-if="invalid_sex_msg">
         <span class="text-white badge bg-danger">{{ invalid_sex_msg }}</span>
