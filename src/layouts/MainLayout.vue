@@ -31,8 +31,8 @@
         <slot />
     </div>
 </div>
-<div class="modal" id="page_loading">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="page_loading" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background: transparent; border: 0;">
             <div class="row align-items-baseline justify-content-center">
                 <div class="col-1 text-end text-white">
@@ -50,8 +50,8 @@
         </div>
     </div>
 </div>
-<div class="modal" id="service_unavailable">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="service_unavailable" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background: transparent; border: 0;">
             <div class="row align-items-baseline justify-content-center">
                 <UnavailableView />
@@ -59,8 +59,8 @@
         </div>
     </div>
 </div>
-<div class="modal" id="disconnected">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="disconnected" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-centered" >
         <div class="modal-content" style="background: transparent; border: 0;">
             <div class="row align-items-baseline justify-content-center">
                 <div class="toast show px-0">
@@ -116,10 +116,11 @@ import {
 } from 'vue';
 import UnavailableView from "../views/UnavailableView.vue";
 import init from "../helpers/init";
+import router from "../router";
 
+const timer_id = ref(null);
 const net_msg_shown = ref(true);
 const is_online = ref(true);
-const timer_id = ref(0);
 const store = useDataStore();
 const auth_store = useAuthStore();
 
@@ -143,12 +144,17 @@ watchEffect(()=>{
 
 onMounted(()=>{
     $('#page_loading').modal('show')
+    $('#service_unavailable').on('show.bs.modal',()=>{
+        timer_id.value = setInterval(() => {
+            init.initiate()
+        }, 1000);
+    })
+    $('#service_unavailable').on('hide.bs.modal',()=>{
+        if(timer_id.value) clearInterval(timer_id.value)
+        window.location.reload()
+    })
     window.addEventListener('online',()=>is_online.value=true)
     window.addEventListener('offline',()=>is_online.value=false)
-    clearInterval(timer_id.value)
-    timer_id.value = setInterval(()=>{
-        init.initiate()
-    },2000)
 })
 
 const { 
