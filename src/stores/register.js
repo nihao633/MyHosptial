@@ -68,8 +68,6 @@ export const useRegisterStore = defineStore("register_variables", () => {
             password: password.value,
         })
 
-        console.log(res);
-
         // registeration failed
         if (res.message == 'Request failed with status code 500') {
             content_loading.value = false

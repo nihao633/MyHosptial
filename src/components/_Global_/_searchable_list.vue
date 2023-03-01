@@ -45,6 +45,7 @@ const make_uppercase = (str) => {
                 .join(' ')
 }
 const set_name = (val,path = null) => {
+    if(val == null) return val
     if(typeof(val) == 'string') return make_uppercase(val)
     if(path?.length == 2) return val[path[0]] + ' (' + val[path[1]] + ')'
     if(path?.length == 3) return val[path[0]] + ' (' + val[path[1]] + ')' + ' (' + val[path[2]] + ')'

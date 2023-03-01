@@ -1,8 +1,25 @@
 <template>
-<h1>Transaction History</h1>
+ <div class="d-flex align-items-center justify-content-between">
+    <h1>Transaction History</h1>
+    <SearchableList 
+        :path="['name']"
+        :array="['All Branches',...branches]" 
+        @select="select_branch" 
+        :selected_val="selected_branch" 
+        :placeholder="'All Branches'"
+    />
+</div>
 <div :class="{'form-control': sale_records.length == 0 }">
-    <DataTable 
+    <DataTable
+        :selected_row="selected_row"
+        @select_row="select_row" 
         :array="sale_records" 
+        :edit_row="false" 
+        @edit_mode_on="edit_mode_on" 
+        :searching="searching" 
+        :not_found="not_found" 
+        @begin_search="begin_search" 
+        @pause_search="pause_search" 
         v-if="!content_loading && sale_records.length !== 0" 
     />
     <div class="p-3 text-danger" v-if="!content_loading && sale_records.length == 0 && searching == null">
@@ -20,15 +37,20 @@
         </div>
     </div>
 </div>
+
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
+import { 
+    storeToRefs 
+} from 'pinia';
 import {
-    onMounted
+    onMounted,
 } from 'vue';
 import DataTable from '../components/_Global_/_data_table.vue';
-import { useDataStore } from '../stores/data';
+import { 
+    useDataStore 
+} from '../stores/data';
 import {
     useTransactionStore
 } from '../stores/transactions.js';
@@ -36,17 +58,31 @@ import {
 const data_store = useDataStore()
 const store = useTransactionStore()
 const {
-    transactions,
-    sale_records
+    selected_row,
+    edit_row,
+    sale_records,
+    branches,
+    searching,
+    not_found,
+    selected_branch
 } = storeToRefs(store)
+
 const {
-    initiate
+    initiate,
+    select_row,
+    edit_mode_on,
+    begin_edit,
+    pause_edit,
+    begin_search,
+    pause_search,
+    select_branch,
 } = store
 const {
     content_loading
 } = storeToRefs(data_store)
 
-onMounted(async () => {
-    initiate()
+onMounted(async()=>{
+    content_loading.value = true
+    await initiate()
 })
 </script>
