@@ -2,7 +2,7 @@ const guest_routes = [
     {
         path: "/forget-password",
         name: "forgot_password",
-        component: () => import("../../views/ForgetPassword.vue"),
+        component: () => import("../../views/guest/ForgetPassword.vue"),
         meta: {
             required_auth: false,
             title: 'Request Password Reset'
@@ -11,7 +11,7 @@ const guest_routes = [
     {
         path: "/reset-password",
         name: "reset_password",
-        component: () => import("../../views/ResetPassword.vue"),
+        component: () => import("../../views/guest/ResetPassword.vue"),
         meta: {
             required_auth: false,
             title: 'Set New Password'
@@ -20,7 +20,7 @@ const guest_routes = [
     {
         path: "/register",
         name: "register",
-        component: () => import("../../views/RegisterView.vue"),
+        component: () => import("../../views/guest/RegisterView.vue"),
         meta: {
             required_auth: false,
             title: 'New Staff Register'
@@ -29,7 +29,7 @@ const guest_routes = [
     {
         path: "/login",
         name: "login",
-        component: () => import("../../views/LoginView.vue"),
+        component: () => import("../../views/guest/LoginView.vue"),
         meta: {
             required_auth: false,
             title: 'Staff Login'
@@ -38,7 +38,7 @@ const guest_routes = [
     {
         path: "/contact",
         name: "contact",
-        component: () => import("../../views/ContactView.vue"),
+        component: () => import("../../views/guest/ContactView.vue"),
         meta: {
             required_auth: false,
             title: 'Contacts'
@@ -47,7 +47,7 @@ const guest_routes = [
     {
         path: "/about",
         name: "about",
-        component: () => import("../../views/AboutView.vue"),
+        component: () => import("../../views/guest/AboutView.vue"),
         meta: {
             required_auth: false,
             title: 'About the author'

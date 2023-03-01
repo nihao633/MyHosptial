@@ -87,7 +87,7 @@
         <small>{{ auth_user?.setting.hospital_name }}</small>
         <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
     </div>
-    <div class="toast-body shadow">
+    <div class="toast-body shadow bg-white rounded-bottom">
       Your internet connection is restored.
     </div>
   </div>
@@ -114,7 +114,7 @@ import {
     onMounted,
     ref
 } from 'vue';
-import UnavailableView from "../views/UnavailableView.vue";
+import UnavailableView from "../views/guest/UnavailableView.vue";
 import init from "../helpers/init";
 import router from "../router";
 

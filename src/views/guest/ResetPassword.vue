@@ -33,11 +33,11 @@
 </template>
 
 <script setup>
-import ImageCard from '../components/Auth/ImageCard.vue';
-import AuthLayout from '../layouts/_layouts/AuthLayout.vue';
+import ImageCard from '../../components/Auth/ImageCard.vue';
+import AuthLayout from '../../layouts/_layouts/AuthLayout.vue';
 import {
     useAuthStore
-} from '../stores/auth';
+} from '../../stores/auth';
 import {
     storeToRefs
 } from 'pinia';
@@ -45,9 +45,9 @@ import {
     onMounted
 } from 'vue';
 import { useRoute } from 'vue-router';
-import FormCard from '../components/Auth/FormCard.vue';
-import AuthInput from '../components/_Global_/InputBox.vue';
-import AuthButtons from '../components/Auth/AuthButtons.vue';
+import FormCard from '../../components/Auth/FormCard.vue';
+import AuthInput from '../../components/_Global_/InputBox.vue';
+import AuthButtons from '../../components/Auth/AuthButtons.vue';
 
 const store = useAuthStore();
 const {

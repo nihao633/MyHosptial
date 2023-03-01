@@ -32,17 +32,17 @@
 </template>
 
 <script setup>
-import AuthLayout from '../layouts/_layouts/AuthLayout.vue';
+import AuthLayout from '../../layouts/_layouts/AuthLayout.vue';
 import { 
   useAuthStore 
-} from '../stores/auth';
+} from '../../stores/auth';
 import { 
   storeToRefs 
 } from 'pinia';
-import ImageCard from '../components/Auth/ImageCard.vue';
-import FormCard from '../components/Auth/FormCard.vue';
-import AuthInput from '../components/_Global_/InputBox.vue';
-import AuthButtons from '../components/Auth/AuthButtons.vue';
+import ImageCard from '../../components/Auth/ImageCard.vue';
+import FormCard from '../../components/Auth/FormCard.vue';
+import AuthInput from '../../components/_Global_/InputBox.vue';
+import AuthButtons from '../../components/Auth/AuthButtons.vue';
 
 const store = useAuthStore();
 const { 

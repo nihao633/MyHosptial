@@ -7,7 +7,7 @@
                 @click="$emit('select',key);" 
                 :class="{ 'active shadow': current_tab == key }" 
                 role="button"
-            >{{ item }}</a>
+            >{{ item.charAt(0).toUpperCase() + item.slice(1) }}</a>
         </li>
     </ul>
     <div class="d-md-none">

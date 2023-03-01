@@ -1,20 +1,18 @@
 <template>
 <TabLayout 
     :title="'IPD'"
-    :array="[
-        'Create',
-        'Manage'
-    ]"
+    :array="tabs"
     :current_tab="current_tab"
-    @select="(val)=>{current_tab=val;reset();}"
+    @select="initiate"
 />
 </template>
 <script setup>
-import { storeToRefs } from 'pinia';
-import TabLayout from '../../components/_Global_/TabLayout.vue';
-import { useOpdStore } from '../../stores/medicord';
+import TabLayout from '@/components/_Global_/TabLayout.vue';
+import { useMedicordComposable } from '@/composables/medicord';
 
-const store = useOpdStore();
-const { current_tab } = storeToRefs(store);
-const { reset } = store;
+const {
+    current_tab,
+    initiate,
+    tabs
+} = useMedicordComposable();
 </script>

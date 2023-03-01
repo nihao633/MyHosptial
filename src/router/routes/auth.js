@@ -1,4 +1,9 @@
-import HomeView from "../../views/HomeView.vue";
+import HomeView from "../../views/auth/HomeView.vue";
+import imaging_routes from "./auth/imaging";
+import ipd_routes from "./auth/ipd";
+import lab_routes from "./auth/lab";
+import opd_routes from "./auth/opd";
+import reception_routes from "./auth/reception.js";
 
 const auth_routes = [
     {
@@ -10,66 +15,11 @@ const auth_routes = [
             title: 'Home - My Hospital EMRS',
         }
     },
-    {
-        path: "/reception",
-        name: "reception",
-        components: {
-            default: () => import('../../views/ReceptionView.vue'),
-            sub_layout: () => import('../../layouts/_layouts/ReceptionLayout.vue')
-        },
-        meta: {
-            required_auth: true,
-            title: 'Reception'
-        }
-    },
-    {
-        path: "/opd",
-        name: "opd",
-        components: {
-            default: () => import('../../views/OpdView.vue'),
-            sub_layout: () => import('../../layouts/_layouts/OpdLayout.vue')
-        },
-        meta: {
-            required_auth: true,
-            title: 'Out Patient Deparment'
-        }
-    },
-    {
-        path: "/ipd",
-        name: "ipd",
-        components: {
-            default: () => import('../../views/IpdView.vue'),
-            sub_layout: () => import('../../layouts/_layouts/IpdLayout.vue')
-        },
-        meta: {
-            required_auth: true,
-            title: 'In Patient Deparment'
-        }
-    },
-    {
-        path: "/lab",
-        name: "lab",
-        components: {
-            default: () => import('../../views/LabView.vue'),
-            sub_layout: () => import('../../layouts/_layouts/LabLayout.vue')
-        },
-        meta: {
-            required_auth: true,
-            title: 'Laboratory'
-        }
-    },
-    {
-        path: "/imaging",
-        name: "imaging",
-        components: {
-            default: () => import('../../views/ImagingView.vue'),
-            sub_layout: () => import('../../layouts/_layouts/ImagingLayout.vue')
-        },
-        meta: {
-            required_auth: true,
-            title: 'Imaging Services'
-        }
-    },
+    ... reception_routes,
+    ... opd_routes,
+    ... ipd_routes,
+    ... lab_routes,
+    ... imaging_routes,
     {
         path: "/pharmacy",
         name: "pharmacy",

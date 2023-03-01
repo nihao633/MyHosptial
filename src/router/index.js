@@ -47,11 +47,11 @@ router.beforeEach(async (to,from) => {
         if (auth_user.value && to.name !== 'login') {
             if (auth_user.value.rank !== 'admin') {
                 if (to.name == 'settings') invalid_request()
-                if (auth_user.value.rank !== 'reception' && to.name == 'reception') invalid_request()
-                if (auth_user.value.rank !== 'doctor' && auth_user.value.rank !== 'nurse' && to.name == 'opd') invalid_request()
-                if (auth_user.value.rank !== 'doctor' && auth_user.value.rank !== 'nurse' && to.name == 'ipd') invalid_request()
-                if (auth_user.value.rank !== 'lab technician' && to.name == 'lab') invalid_request()
-                if (auth_user.value.rank !== 'xray technician' && to.name == 'imaging') invalid_request()
+                if (auth_user.value.rank !== 'reception' && to.meta.department == 'reception') invalid_request()
+                if (auth_user.value.rank !== 'doctor' && auth_user.value.rank !== 'nurse' && to.meta.department == 'opd') invalid_request()
+                if (auth_user.value.rank !== 'doctor' && auth_user.value.rank !== 'nurse' && to.meta.department == 'ipd') invalid_request()
+                if (auth_user.value.rank !== 'lab technician' && to.meta.department == 'lab') invalid_request()
+                if (auth_user.value.rank !== 'xray technician' && to.meta.department == 'imaging') invalid_request()
                 if (auth_user.value.rank !== 'pharmacist' && to.name == 'pharmacy') invalid_request()
                 if (auth_user.value.rank !== 'accountant' && auth_user.value.rank !== 'cashier' && to.name == 'pos') invalid_request()
                 if (auth_user.value.rank !== 'accountant' && to.name == 'transactions') invalid_request()

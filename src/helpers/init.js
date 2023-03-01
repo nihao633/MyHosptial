@@ -2,6 +2,7 @@ import axios from "axios";
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import { useOpdStore } from "@/stores/medicord";
 
 const _SERVER_ADDR = (import.meta.env.MODE == 'production') ? import.meta.env.VITE_SERVER_ADDRESS : import.meta.env.VITE_DEV_SERVER_ADDRESS;
 const current_time = ref('Loading...')
@@ -50,7 +51,7 @@ const check_server_response = async () => {
     return true;
 }
 
-const initiate = async () => {    
+const initiate = async () => { 
     is_server_up.value = await check_server_response()
 
     return is_server_up;

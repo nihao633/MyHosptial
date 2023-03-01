@@ -50,7 +50,7 @@ import {
     onMounted 
 } from 'vue';
 import emailjs from '@emailjs/browser';
-import { useDataStore } from '../stores/data';
+import { useDataStore } from '../../stores/data';
 
 const store = useDataStore()
 const email = ref('')
