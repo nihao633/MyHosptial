@@ -18,7 +18,7 @@
                     </a>
                 </li>
                 <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/settings">Settings</RouterLink></li>
-                <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/reports">Reports</RouterLink></li>
+                <li v-if="auth_user.rank == 'admin'"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reports">Reports</a></li>
                 <li>
                     <a class="dropdown-item" href="#" @click="logout">Log Out</a>
                 </li>
@@ -92,6 +92,19 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="reports" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-content" style="background: transparent; border: 0;">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-white" style="width: 90vw;">
+                <div style="width: 80vw;"><canvas id="acquisitions" style="width: 50vw;"></canvas></div>
+            </div>
+        </div>
+    </div>
+</div>
 <FooterLayout :auth_user="auth_user" />
 </template>
 
@@ -116,7 +129,7 @@ import {
 } from 'vue';
 import UnavailableView from "../views/guest/UnavailableView.vue";
 import init from "../helpers/init";
-import router from "../router";
+import Chart from 'chart.js/auto';
 
 const timer_id = ref(null);
 const net_msg_shown = ref(true);
@@ -143,18 +156,46 @@ watchEffect(()=>{
 })
 
 onMounted(()=>{
-    $('#page_loading').modal('show')
+    $('#page_loading').modal('show');
     $('#service_unavailable').on('show.bs.modal',()=>{
         timer_id.value = setInterval(() => {
             init.initiate()
         }, 1000);
-    })
+    });
     $('#service_unavailable').on('hide.bs.modal',()=>{
         if(timer_id.value) clearInterval(timer_id.value)
-        window.location.reload()
-    })
-    window.addEventListener('online',()=>is_online.value=true)
-    window.addEventListener('offline',()=>is_online.value=false)
+        if(is_online.value) window.location.reload()
+    });
+    window.addEventListener('online',()=>is_online.value=true);
+    window.addEventListener('offline',()=>is_online.value=false);
+
+    (async function() {
+    const data = [
+        { year: 2010, count: 10 },
+        { year: 2011, count: 20 },
+        { year: 2012, count: 15 },
+        { year: 2013, count: 25 },
+        { year: 2014, count: 22 },
+        { year: 2015, count: 30 },
+        { year: 2016, count: 28 },
+    ];
+
+    new Chart(
+        document.getElementById('acquisitions'),
+        {
+        type: 'bar',
+        data: {
+            labels: data.map(row => row.year),
+            datasets: [
+            {
+                label: 'Acquisitions by year',
+                data: data.map(row => row.count)
+            }
+            ]
+        }
+        }
+    );
+    })();
 })
 
 const { 

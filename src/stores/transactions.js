@@ -12,7 +12,7 @@ export const useTransactionStore = defineStore('transaction_variables',()=>{
     const edit_row = ref(false)
     const selected_row = ref(null)
     const search_timer = ref(0)
-    const searching = ref(false)
+    const searching = ref(null)
     const not_found = ref(false)
     const search_object = ref(new Object())
     const selected_branch = ref('All Branches')
@@ -24,7 +24,7 @@ export const useTransactionStore = defineStore('transaction_variables',()=>{
         edit_row.value = false
         selected_row.value = null
         search_timer.value = 0
-        searching.value = false
+        searching.value = null
         not_found.value = false
         search_object.value = new Object()
     }

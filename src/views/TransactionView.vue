@@ -15,7 +15,6 @@
         @select_row="select_row" 
         :array="sale_records" 
         :edit_row="false" 
-        @edit_mode_on="edit_mode_on" 
         :searching="searching" 
         :not_found="not_found" 
         @begin_search="begin_search" 
@@ -59,7 +58,6 @@ const data_store = useDataStore()
 const store = useTransactionStore()
 const {
     selected_row,
-    edit_row,
     sale_records,
     branches,
     searching,
@@ -70,9 +68,6 @@ const {
 const {
     initiate,
     select_row,
-    edit_mode_on,
-    begin_edit,
-    pause_edit,
     begin_search,
     pause_search,
     select_branch,
