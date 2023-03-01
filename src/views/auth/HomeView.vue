@@ -45,7 +45,7 @@
         :image_path="'/images/pharmacy.jpg'" 
         :title="'Pharmacy'" 
         :description="'Manage Medical Stocks'"
-        :link="'/pharmacy'"
+        :link="'/pharmacy/create_purchase'"
         :authorized="(store.auth_user?.rank == 'admin' || store.auth_user?.rank == 'pharmacist')"
     />
     <CardView 

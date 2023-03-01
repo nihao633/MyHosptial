@@ -3,6 +3,7 @@ import imaging_routes from "./auth/imaging";
 import ipd_routes from "./auth/ipd";
 import lab_routes from "./auth/lab";
 import opd_routes from "./auth/opd";
+import pharmacy_routes from "./auth/pharmacy";
 import reception_routes from "./auth/reception.js";
 
 const auth_routes = [
@@ -20,15 +21,7 @@ const auth_routes = [
     ... ipd_routes,
     ... lab_routes,
     ... imaging_routes,
-    {
-        path: "/pharmacy",
-        name: "pharmacy",
-        component: () => import('../../views/PharmacyView.vue'),
-        meta: {
-            required_auth: true,
-            title: 'Pharmacy'
-        }
-    },
+    ... pharmacy_routes,
     {
         path: "/settings",
         name: "settings",

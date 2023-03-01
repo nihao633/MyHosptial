@@ -15,7 +15,7 @@
     v-if="!content_loading && dispense_records.length !== 0" 
 />
 <div class="p-3 text-danger" v-if="!content_loading && dispense_records.length == 0 && searching == null">
-    There aren't any drug purchase records to display in the main store.
+    There aren't any drug dispense records to display in the main store.
 </div>
 <div v-if="content_loading" class="p-2">
     <h6>
