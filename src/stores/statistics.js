@@ -2,6 +2,7 @@ import Chart from 'chart.js/auto';
 import { defineStore, storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import { useDataStore } from '@/stores/data.js';
+import init from '@/helpers/init.js';
 
 export const useStatisticsStore = defineStore('statistics',()=>{
     const store = useDataStore()
@@ -15,7 +16,7 @@ export const useStatisticsStore = defineStore('statistics',()=>{
     const display_type = ref('pie');
     const timer_id = ref(0);
 
-    const generate_report = () => {
+    const generate_report = async () => {
         content_loading.value = true
         clearTimeout(timer_id.value)
         let container = document.getElementById('chart_container')
@@ -23,6 +24,25 @@ export const useStatisticsStore = defineStore('statistics',()=>{
             container.removeChild(container.firstChild);
         }    
         container.classList.add('d-none')
+
+        const res = await init.sendDataToServer('generate/reports','post',{
+            selected_year: current_year.value,
+            selected_report_type: current_report.value,
+            selected_report_duration: current_duration.value,
+        })
+
+        console.log(res);
+
+        if(res.response) {
+            Object.entries(res.response.data.errors).forEach((err)=>{
+                store.toggleAlert(err[1][0])
+            })
+
+            content_loading.value = false
+            return;
+        }
+
+        console.log(res);
 
         timer_id.value = setTimeout(()=>{
             let chart = document.createElement('canvas');
@@ -55,7 +75,7 @@ export const useStatisticsStore = defineStore('statistics',()=>{
             container.classList.remove('d-none')
             content_loading.value = false    
         },2000)
-        return false;   
+        return ;   
     }
 
     return {
