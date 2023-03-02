@@ -73,7 +73,7 @@ onMounted(()=>{
 
 const send_email = () => {
     emailjs.send(import.meta.env.VITE_EMAILJS_SERVICE_ID, import.meta.env.VITE_EMAILJS_TEMPLATE_ID, { 
-        to_name: auth_user ? auth_user.setting.hospital_name : 'My Hospital EMRS' + 'Customer Service',
+        to_name: 'My Hospital EMRS Customer Service',
         reply_to: email.value,
         from_name: name.value,
         message: message.value,
