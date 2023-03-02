@@ -10,15 +10,15 @@
         <div class="row">
             <div class="col-12 col-xl-6 mb-3 mb-xl-0">
                 <h4>Mr. Han Win Aung</h4>
-                <p><i class="fa-solid fa-location-dot"></i> No. 599, Marga 5 Street, 12 Quarter, South Okkalapa Township, Yangon</p>
+                <p><i class="fa-solid fa-location-dot"></i> Yangon</p>
                 <p><i class="fa-solid fa-phone"></i> +95 9 779 807 807</p>
-                <p><i class="fa-solid fa-envelope"></i> nihao633@gmail.com</p>
+                <p><i class="fa-solid fa-envelope"></i> admin@myhospitalemrs.com</p>
             </div>
             <div class="col mb-3 mb-xl-0">
                 <h4>Marketing Team</h4>
-                <p><i class="fa-solid fa-location-dot"></i> No. 599, Marga 5 Street, 12 Quarter, South Okkalapa Township, Mandalay</p>
+                <p><i class="fa-solid fa-location-dot"></i> Yangon</p>
                 <p><i class="fa-solid fa-phone"></i> +95 9 430 29 610</p>
-                <p><i class="fa-solid fa-envelope"></i> eaindra.rose@gmail.com</p>
+                <p><i class="fa-solid fa-envelope"></i> marketing@myhospitalemrs.com</p>
             </div>
         </div>
     </div>
@@ -51,8 +51,12 @@ import {
 } from 'vue';
 import emailjs from '@emailjs/browser';
 import { useDataStore } from '../../stores/data';
+import { storeToRefs } from 'pinia';
 
 const store = useDataStore()
+const {
+    auth_user
+} = storeToRefs(store)
 const email = ref('')
 const name = ref('')
 const message = ref('')
@@ -69,7 +73,7 @@ onMounted(()=>{
 
 const send_email = () => {
     emailjs.send(import.meta.env.VITE_EMAILJS_SERVICE_ID, import.meta.env.VITE_EMAILJS_TEMPLATE_ID, { 
-        to_name: 'Han Win Aung',
+        to_name: auth_user ? auth_user.setting.hospital_name : 'My Hospital EMRS' + 'Customer Service',
         reply_to: email.value,
         from_name: name.value,
         message: message.value,
