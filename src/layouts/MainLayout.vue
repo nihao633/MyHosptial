@@ -1,6 +1,6 @@
 <template>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top custom-bg shadow">
-    <div class="container" :key="setting_update_key">
+    <div class="container">
         <RouterLink class="navbar-brand custom-text-color" to="/">
             <i class="fa-solid fa-book-medical"></i>
             {{ auth_user ? auth_user.setting.hospital_name : 'My Hospital EMRS' }}
@@ -18,7 +18,7 @@
                     </a>
                 </li>
                 <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/settings">Settings</RouterLink></li>
-                <li v-if="auth_user.rank == 'admin'"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reports">Reports</a></li>
+                <li v-if="auth_user.rank == 'admin'"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reports" style="cursor:pointer;">Reports</a></li>
                 <li>
                     <a class="dropdown-item" href="#" @click="logout">Log Out</a>
                 </li>
@@ -92,23 +92,15 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="reports" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
-    <div class="modal-dialog modal-dialog-centered" >
-        <div class="modal-content" style="background: transparent; border: 0;">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-white" style="width: 90vw;">
-                <div style="width: 80vw;"><canvas id="acquisitions" style="width: 50vw;"></canvas></div>
-            </div>
-        </div>
-    </div>
-</div>
+<GenerateChart 
+    :chart_id="'reports'"
+    :title="'Statistics'"
+/>
 <FooterLayout :auth_user="auth_user" />
 </template>
 
 <script setup>
+import GenerateChart from "../components/_Global_/GenerateChart.vue";
 import {
     RouterLink
 } from "vue-router";
@@ -129,7 +121,6 @@ import {
 } from 'vue';
 import UnavailableView from "../views/guest/UnavailableView.vue";
 import init from "../helpers/init";
-import Chart from 'chart.js/auto';
 
 const timer_id = ref(null);
 const net_msg_shown = ref(true);
@@ -166,41 +157,19 @@ onMounted(()=>{
         if(timer_id.value) clearInterval(timer_id.value)
         if(is_online.value) window.location.reload()
     });
+    $('#reports').on('hide.bs.modal',()=>{
+        let container = document.getElementById('chart_container')
+        while (container.hasChildNodes()) {
+            container.removeChild(container.firstChild);
+        }    
+        container.classList.add('d-none')
+    })
     window.addEventListener('online',()=>is_online.value=true);
     window.addEventListener('offline',()=>is_online.value=false);
-
-    (async function() {
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 },
-    ];
-
-    new Chart(
-        document.getElementById('acquisitions'),
-        {
-        type: 'bar',
-        data: {
-            labels: data.map(row => row.year),
-            datasets: [
-            {
-                label: 'Acquisitions by year',
-                data: data.map(row => row.count)
-            }
-            ]
-        }
-        }
-    );
-    })();
 })
 
 const { 
     auth_user,
-    setting_update_key 
 } = storeToRefs(store);
 const {
     logout

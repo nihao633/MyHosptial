@@ -89,7 +89,6 @@ const {
     branch_loading,
     set_dates,
     consultant_dates,
-    setting_udpate_key
 } = storeToRefs(store);
 
 const {
@@ -308,7 +307,7 @@ const save_settings = async () => {
         theme: theme.value
     })
     
-    setting_update_key.value += 1
+    window.location.reload()
 }
 </script>
 

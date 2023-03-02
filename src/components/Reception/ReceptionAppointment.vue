@@ -96,7 +96,7 @@ const {
 } = store;
 
 const register = () => {
-    (validate()) ? register_appointment(): invalid_date_of_visit_msg = 'Please select the intended date of visit.'
+    (validate()) ? register_appointment(): invalid_date_of_visit_msg.value = 'Please select the intended date of visit.'
 }
 
 const select_sex = (val) => {
