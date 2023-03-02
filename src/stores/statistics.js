@@ -31,8 +31,6 @@ export const useStatisticsStore = defineStore('statistics',()=>{
             selected_report_duration: current_duration.value,
         })
 
-        console.log(res);
-
         if(res.response) {
             Object.entries(res.response.data.errors).forEach((err)=>{
                 store.toggleAlert(err[1][0])
@@ -44,6 +42,12 @@ export const useStatisticsStore = defineStore('statistics',()=>{
 
         console.log(res);
 
+        let pt_report = [];
+        
+        pt_report = res.data.reports.patient_report;
+
+        console.log(pt_report.data);
+
         timer_id.value = setTimeout(()=>{
             let chart = document.createElement('canvas');
             chart.id = 'my_report';
@@ -52,13 +56,13 @@ export const useStatisticsStore = defineStore('statistics',()=>{
             const ctx = document.getElementById('my_report');
     
             new Chart(ctx, {
-                type: display_type.value,
+                type: display_type.value == 'pie' && (typeof(pt_report.labels) == 'object' ? Object.values(pt_report.labels) : pt_report.labels).length > 12 ? invalid_display_type() : display_type.value,
                 data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    labels: typeof(pt_report.labels) == 'object' ? Object.values(pt_report.labels) : pt_report.labels,
                     datasets: [
                         {
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
+                            label: pt_report.label,
+                            data: typeof(pt_report.data) == 'object' ? Object.values(pt_report.data) : pt_report.data,
                             borderWidth: 1
                         }
                     ]
@@ -78,6 +82,7 @@ export const useStatisticsStore = defineStore('statistics',()=>{
         return ;   
     }
 
+    const invalid_display_type = () => {display_type.value = 'line';store.toggleAlert('You can only select pie for items count lower than or equal to 12.');return display_type.value;}
     return {
         current_year,
         current_report,

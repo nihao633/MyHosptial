@@ -4,7 +4,7 @@
         <div class="row mb-4">
             <h1>Contact Info</h1>
             <p>
-                You can reach out to me and my wife via the following contacts:
+                You can reach out to me and my marketing team via the following contacts:
             </p>
         </div>
         <div class="row">
@@ -15,7 +15,7 @@
                 <p><i class="fa-solid fa-envelope"></i> nihao633@gmail.com</p>
             </div>
             <div class="col mb-3 mb-xl-0">
-                <h4>Mrs. Eaindra Kyaw</h4>
+                <h4>Marketing Team</h4>
                 <p><i class="fa-solid fa-location-dot"></i> No. 599, Marga 5 Street, 12 Quarter, South Okkalapa Township, Mandalay</p>
                 <p><i class="fa-solid fa-phone"></i> +95 9 430 29 610</p>
                 <p><i class="fa-solid fa-envelope"></i> eaindra.rose@gmail.com</p>
