@@ -6,7 +6,7 @@
             :path="['name']"
             :placeholder="'Choose your consultant'"
             :selected_val="consultant"
-            @select="$emit('select',consultant)"
+            @select="val => $emit('select',val)"
         />
     </div>
     <div class="mb-3" v-if="invalid_consultant_name_msg">

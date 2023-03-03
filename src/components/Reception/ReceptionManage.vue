@@ -61,7 +61,7 @@
                 </div>
                 <div class="modal-body">
                     <p v-if="current_section == 2"><strong>Intended Date of Visit: </strong>{{ selected_patient?.intended_date_of_visit }}</p>
-                    <strong class="text-danger d-block mb-3" v-if="edit_mode && current_section == 2">* <em>Please <a href="#" title="delete" data-bs-target="#confirm_dialog" data-bs-toggle="modal">delete</a> the current appointment to update the appointment date.</em></strong>
+                    <strong class="text-danger d-block mb-3" v-if="edit_mode && current_section == 2">* <em>Please <a href="#" title="delete" data-bs-target="#confirm_dialog" data-bs-toggle="modal">delete</a> this appointment to update the appointment date.</em></strong>
                     <div class="mb-3" v-if="invalid_father_name_msg">
                         <span class="text-white badge bg-danger">{{ invalid_father_name_msg }}</span>
                     </div>

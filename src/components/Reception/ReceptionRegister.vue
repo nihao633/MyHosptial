@@ -6,6 +6,7 @@
         @select="get_dates"
     />
     <InputBox 
+        :id="'visit_date_picker'"
         :class="'mb-3'"
         :placeholder="'Select Your Date of Visit'"
         :label="'Date of Visit:'"

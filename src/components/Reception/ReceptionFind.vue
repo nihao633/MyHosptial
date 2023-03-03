@@ -54,7 +54,7 @@
                         <div>
                             <strong> Phone Number: </strong>{{ patient.phone_number }}
                         </div>
-                        <small><strong>Consultant's Name: </strong>{{ patient.consultant_name }}</small>
+                        <small v-if="search_location=='appointment'"><strong>Consultant's Name: </strong>{{ patient.consultant_name }}</small>
                         <div v-if="selected_patient !== null && selected_patient == patient" class="bottom-0 end-0 position-absolute bg-white shadow">
                             <button class="btn btn-mine text-secodnary" title="view more" data-bs-target="#patient_dialog" data-bs-toggle="modal"><i class="fa-solid fa-eye"></i></button>
                             <button class="btn btn-mine text-secodnary" title="print" @click="print_record()"><i class="fa-solid fa-print"></i></button>
@@ -146,10 +146,7 @@
                 <div class="mb-3" v-if="invalid_phone_number_msg">
                     <span class="text-white badge bg-danger">{{ invalid_phone_number_msg }}</span>
                 </div>
-                <p><strong><strong class="text-danger" v-if="edit_mode">*</strong>Consultant's Name: </strong>{{ edit_mode ? '' : selected_patient?.consultant_name }}<input class="form-control" type="text" v-model="consultant" v-if="edit_mode" @mousedown="invalid_consultant_name_msg = null"></p>
-                <div class="mb-3" v-if="invalid_consultant_name_msg">
-                    <span class="text-white badge bg-danger">{{ invalid_consultant_name_msg }}</span>
-                </div>edit_mode
+                <p v-if="search_location=='appointment'"><strong>Consultant's Name: </strong>{{ selected_patient?.consultant_name }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="edit_mode = false">Close</button>

@@ -1,5 +1,5 @@
 <template>
-<LayoutFrame :class="'px-0'">
+<LayoutFrame :class="'px-3'">
     <ReceptionAppointment/>
 </LayoutFrame>
 </template>

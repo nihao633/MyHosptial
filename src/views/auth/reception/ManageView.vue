@@ -1,5 +1,5 @@
 <template>
-<LayoutFrame :class="'px-5'">
+<LayoutFrame :class="'px-3'">
     <ReceptionManage/>
 </LayoutFrame>
 </template>
