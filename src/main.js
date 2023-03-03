@@ -18,5 +18,5 @@ createApp(App)
     .mount('#app')
 
 axios.defaults.withCredentials = true;
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+axios.defaults.headers.common["Access-Control-Allow-Origin"] = "http://localhost:5173";
 axios.defaults.headers.common["Accept"] = "application/json";

@@ -20,7 +20,7 @@
             <SubHeader @create_mode="set_create_mode" @click_two="show_set_date" :button_name_two="(selected_consultant == '') ? '' : 'Set Consultant Date'" :route_path="'#create_dialog'" :title="'Consultants:'" :button_name="'Add Consultant'">
                 <ListView :type="'consultant'" :style="'height: 331px; overflow: auto;'" :loading="consultant_loading" :array="consultants" :selected_value="selected_consultant" @select="select_consultant" @edit_on="edit_on" />
             </SubHeader>
-            <EditDialog :object="selected_consultant !== '' ? selected_consultant : selected_user !== '' ? selected_user : selected_branch !== '' ? selected_branch : ''" :title="selected_consultant !== '' ? 'Consultant' : selected_user !== '' ? 'User' : selected_branch !== '' ? 'Branch' : ''" :edit_mode="edit_mode" @update="update" @edit="edit_values" @close="close" />
+            <EditDialog :disabled="['id','branch_id','level']" :object="selected_consultant !== '' ? selected_consultant : selected_user !== '' ? selected_user : selected_branch !== '' ? selected_branch : ''" :title="selected_consultant !== '' ? 'Consultant' : selected_user !== '' ? 'User' : selected_branch !== '' ? 'Branch' : ''" :edit_mode="edit_mode" @update="update" @edit="edit_values" @close="close" />
             <ConfirmDialog @confirm="destroy">
                 <template #title>Are you sure to delete this {{ selected_consultant !== '' && selected_set_date == '' ? `consultant named '${selected_consultant.name}'` : selected_user !== '' ?  `user named '${selected_user.name}'` : selected_branch !== '' ? `branch named '${selected_branch.name}'` : selected_set_date !== '' ? `this date ${selected_set_date.date_available}` : ''}} ?</template>
             </ConfirmDialog>
@@ -70,10 +70,10 @@ import init from '../helpers/init';
 
 const store = useDataStore();
 const create_value = ref({});
-const create_mode = ref('')
 const selected_set_date = ref('');
 const edit_mode = ref(false);
 const {
+    create_mode,
     auth_user,
     hospital_name,
     theme,

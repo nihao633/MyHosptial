@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import init from '../helpers/init'
 
 export const useDataStore = defineStore("global_variables", () => {
+    const create_mode = ref('')
     const content_loading = ref(false);
     const page_loading = ref(true);
     const alert_loading = ref(false);
@@ -42,11 +43,11 @@ export const useDataStore = defineStore("global_variables", () => {
             users.value = []
         }
 
-        if(selected_consultant.value !== '') {
+        if(selected_consultant.value !== '' || create_mode.value == 'consultant') {
             consultant_loading.value = true
             consultants.value = []
         }
-        if(selected_branch.value !== '') {
+        if(selected_branch.value !== '' || create_mode.value == 'branch') {
             branch_loading.value = true
             branches.value = []
         }
@@ -68,8 +69,8 @@ export const useDataStore = defineStore("global_variables", () => {
         }
 
         if(selected_user.value !== '') users.value = res_users.data.users
-        if(selected_consultant.value !== '') consultants.value = res_consultants.data.consultants
-        if(selected_branch.value !== '') branches.value = res_branches.data.branches
+        if(selected_consultant.value !== '' || create_mode.value == 'consultant') consultants.value = res_consultants.data.consultants
+        if(selected_branch.value !== '' || create_mode.value == 'branch') branches.value = res_branches.data.branches
 
         users.value.forEach((value)=>{
             delete value.created_at
@@ -146,5 +147,6 @@ export const useDataStore = defineStore("global_variables", () => {
         user_loading,
         branch_loading,
         consultant_dates,
+        create_mode
     };
 });
