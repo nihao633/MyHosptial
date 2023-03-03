@@ -12,7 +12,7 @@
                 }}
             </button>
             <ul id="select_medicord" class="dropdown-menu form-control" style="overflow: auto;" :style="medicords.length > 3 ? 'height:200px;' : ''">
-                <li role="button" class="p-3 custom-select-button" v-for="medicord in medicords" @click="load_medicord(medicord)">{{ medicord.patient.name + ' (ID: ' + medicord.patient.id + ' Consultant: ' + medicord.consultant_name + ') '}}</li>
+                <li role="button" class="p-3 custom-select-button" v-for="medicord in medicords" @click="load_medicord(medicord)">{{ medicord.patient?.name + ' (ID: ' + medicord.patient?.id + ' Consultant: ' + medicord.consultant_name + ') '}}</li>
             </ul>
         </li>
     </div>

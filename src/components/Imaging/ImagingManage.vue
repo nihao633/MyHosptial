@@ -144,6 +144,7 @@ const update = async () => {
 }
 
 const initiate = async () => {
+    selected_patient.value = ''
     old_consultants.value = []
     new_consultants.value = []
     old_medicords.value = []

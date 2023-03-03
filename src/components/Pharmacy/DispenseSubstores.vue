@@ -17,7 +17,7 @@
         <div class="col-12 col-md-5 mb-3">
             <h3>To</h3>
             <label class="form-label">Sub-Branch:</label>
-            <SearchableList :path="['name']" @select="select_branch" :selected_val="selected_branch" :array="branches"/>
+            <SearchableList :path="['name']" :not_found="not_found" :searching="searching" @select="select_branch" :selected_val="selected_branch" :array="branches"/>
         </div>
     </div>
     <div class="d-flex mb-3">
@@ -38,11 +38,13 @@
 </template>
 <script setup>
 import { usePharmacyStore } from '../../stores/pharmacy';
+import { usePosStore } from '../../stores/pos';
 import { useDataStore } from '../../stores/data';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 import init from '../../helpers/init';
 
+const pos_store = usePosStore();
 const data_store = useDataStore();
 const store = usePharmacyStore();
 const {
@@ -52,6 +54,10 @@ const {
     selected_branch,
     dispensed_amount
 } = storeToRefs(store);
+const {
+    not_found,
+    searching
+} = storeToRefs(pos_store)
 const {
     content_loading
 } = storeToRefs(data_store)

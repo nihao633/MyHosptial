@@ -2,14 +2,17 @@ import { ref } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import init from '../helpers/init';
 import { useDataStore } from "./data";
+import { usePosStore } from "./pos";
 
 export const usePharmacyStore = defineStore("pharmacy_variables", () => {
     const store = useDataStore();
     const { content_loading } = storeToRefs(store);
+    const pos_store = usePosStore();
+    const {
+        searching
+    } = storeToRefs(pos_store);
     const expired_list = ref(false);
     const edit_row = ref(false);
-    const searching = ref(null);
-    const not_found = ref(false);
     const current_tab = ref(0);
     const current_section = ref(1)
     const selected_branch = ref('')
@@ -54,8 +57,6 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
     const initiate_purchase_records = async () => {
         content_loading.value = true
         edit_row.value = false
-        not_found.value = false
-        searching.value = null
         selected_row.value = ''
         brand_name.value = ''
         generic_name.value = ''
@@ -109,14 +110,14 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
             if(value.level !== 0) branches.value.push(value)
         })
 
+        searching.value = null
+
         content_loading.value = false
     }
 
     const initiate_dispense_records = async () => {
         content_loading.value = true
         edit_row.value = false
-        not_found.value = false
-        searching.value = null
         selected_row.value = ''
         brand_name.value = ''
         generic_name.value = ''
@@ -187,7 +188,6 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
         drug_stock_id,
         brand_name,
         generic_name,
-        not_found,
         drug_form,
         drug_dosage,
         purchased_date,
@@ -198,7 +198,6 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
         purchase_records,
         dispense_records,
         branches,
-        searching,
         drugs,
         stock_report,
         selected_drug,

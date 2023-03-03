@@ -5,16 +5,13 @@
         :class="'mb-3'"
         @select="get_dates"
     />
-    <InputBox 
-        :id="'visit_date_picker'"
-        :class="'mb-3'"
-        :placeholder="'Select Your Date of Visit'"
-        :label="'Date of Visit:'"
-        :required_label="true"
-        v-model:input_value="date_of_visit"
-        :error_message="invalid_date_of_visit_msg"
-        @clear_error="()=>{invalid_date_of_visit_msg=null}"
-    />
+    <div class="mb-3">
+        <label class="form-label"><strong class="text-danger">*</strong>Date of Visit:</label>
+        <input id="visit_date_picker" type="text" class="form-control" placeholder="Select Your Date of Visit" v-model="date_of_visit" @mousedown="invalid_date_of_visit_msg=null">
+    </div>
+    <div class="mb-3" v-if="invalid_date_of_visit_msg">
+        <span class="text-white badge bg-danger">{{ invalid_date_of_visit_msg }}</span>
+    </div>
     <div class="mb-3">
         <label class="form-label" for="visit_type"><strong class="text-danger">*</strong>Visit Type:</label>
         <SearchableList 
