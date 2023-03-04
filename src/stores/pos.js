@@ -96,9 +96,18 @@ export const usePosStore = defineStore('pos_variables',() => {
 
     const addToCart = async () => {
         content_loading.value = true
-        if(quantity.value == 0 || quantity.value == '') return store.toggleAlert('Quantity cannot be 0 or empty.')
-        if(current_method.value == 'ID' && (typeof(current_id.value) == 'string' || current_id.value == 0 || current_id.value == '')) return store.toggleAlert('ID cannot be string or empty.')
-        if(current_method.value == 'Name' && (typeof(current_name.value) == 'number' || current_name.value == '')) return store.toggleAlert('Name cannot contain number or be empty.')
+        if(quantity.value == 0 || quantity.value == '') {
+            content_loading.value = false
+            return store.toggleAlert('Quantity cannot be 0 or empty.')
+        }
+        if(current_method.value == 'ID' && (typeof(current_id.value) == 'string' || current_id.value == 0 || current_id.value == '')) {
+            content_loading.value = false
+            return store.toggleAlert('ID cannot be string or empty.')
+        }
+        if(current_method.value == 'Name' && (typeof(current_name.value) == 'number' || current_name.value == '')) {
+            content_loading.value = false
+            return store.toggleAlert('Name cannot contain number or be empty.')
+        }
 
         if (current_id.value !== '') {
             current_brand_name.value = ''
@@ -125,9 +134,16 @@ export const usePosStore = defineStore('pos_variables',() => {
             drug_id: current_brand_name.value.id,
             quantity: item_quantity.value,
         })
-        if(res?.response?.data.status) {
+
+        if(res.response) {
             content_loading.value = false
-            return store.toggleAlert(res.response.data.status)
+            if(res.response.data.status) return store.toggleAlert(res.response.data.status)
+            if(res.response.data.errors) {
+                Object.entries(res.response.data.errors).forEach(err => {
+                    store.toggleAlert(err[1][0])
+                })
+            }
+            return;
         }
 
         total.value += (quantity.value * res.data.resale_price)
