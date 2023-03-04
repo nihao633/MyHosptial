@@ -33,8 +33,8 @@
                 <ListView :style="'height: 167px; overflow: auto;'" :loading="user_loading" :array="users" :selected_value="selected_user" @select="select_user" :disabled_edit=true />
             </SubHeader>
             <hr>
-            <SubHeader @create_mode="set_create_mode" :route_path="'#create_dialog'" :title="'Branches:'" :button_name="'Add Branch'">
-                <ListView :style="'height: 167px; overflow: auto;'" :loading="branch_loading" :array="branches" :selected_value="selected_branch" @select="select_branch" @edit_on="edit_on" />
+            <SubHeader @create_mode="set_create_mode" @click_two="show_set_price" :button_name_two="(selected_branch == '') ? '' : 'Set Resale Price'" :route_path="'#create_dialog'" :title="'Branches:'" :button_name="'Add Branch'">
+                <ListView :type="'branch'" @get_price="get_resale_price()" :style="'height: 167px; overflow: auto;'" :loading="branch_loading" :array="branches" :selected_value="selected_branch" @select="select_branch" @edit_on="edit_on" />
             </SubHeader>
         </div>
     </div>
@@ -44,6 +44,8 @@
     <DateEdit :title="'Manage Consultant Appointment Dates'">
         <ListView :style="'height: 200px; overflow: auto;'" :type="'consultant_dates'" @select="select_available_date" :loading="consultant_available_date_loading" :array="consultant_dates" :selected_value="selected_set_date"/>
     </DateEdit>
+    <ResalePrice :id="'set_resale_price'" :edit="true" :selected_branch="selected_branch" v-model:percentage="added_percentage" @submit="save_resale_price()" />
+    <ResalePrice :id="'get_resale_price'" :selected_branch="selected_branch" :percentage="added_percentage" />
 </div>
 </template>
 
@@ -67,11 +69,13 @@ import {
 import EditDialog from '../components/Settings/EditDialog.vue';
 import ConfirmDialog from '../components/_Global_/ConfirmDialog.vue';
 import init from '../helpers/init';
+import ResalePrice from '../components/Settings/ResalePrice.vue';
 
 const store = useDataStore();
 const create_value = ref({});
 const selected_set_date = ref('');
 const edit_mode = ref(false);
+const added_percentage = ref(null);
 const {
     create_mode,
     auth_user,
@@ -120,6 +124,9 @@ onMounted(() => {
     $('#select_date').on('hide.bs.modal', function () {
         set_dates.value = []
         $('#date_selector').val('')
+    })
+    $('#set_resale_price').on('shown.bs.modal', function () {
+        $('#price_percentage').focus()
     })
     initiate_settings()
 })
@@ -285,6 +292,7 @@ const create_branch_consultant = async () => {
 }
 
 const show_set_date = () => $('#select_date').modal('show')
+const show_set_price = () => $('#set_resale_price').modal('show')
 const select_set_date = (val) => selected_set_date.value = val
 const select_available_date = val => selected_set_date.value = val
 const remove_set_date = (val) => set_dates.value.splice(val,1)
@@ -301,6 +309,30 @@ const save_dates = async () => {
     return store.toggleAlert(res.data.status,false,200)
 }
 
+const save_resale_price = async () => {
+    if(
+        added_percentage.value == null || 
+        added_percentage.value == 0 || 
+        added_percentage.value == '') 
+    return store.toggleAlert('Percentage cannot be empty or 0.');
+
+    const res = await init.sendDataToServer('resale_price','post',{
+        percentage: added_percentage.value,
+        branch_id: selected_branch.value.id,
+    })
+
+    if(res.response) {
+        Object.entries(res.response.data.errors).forEach(value => {
+            store.toggleAlert(value[1][0])
+        })
+        return;
+    }
+
+    store.toggleAlert(res.data.status,false,200)
+    $('#set_resale_price').modal('hide')
+    return
+}
+
 const save_settings = async () => {
     await init.sendDataToServer('users/settings', 'post', {
         hospital_name: hospital_name.value,
@@ -308,6 +340,16 @@ const save_settings = async () => {
     })
     
     window.location.reload()
+}
+
+const get_resale_price = async() => {
+    const res = await init.sendDataToServer('resale_price?branch_id='+selected_branch.value.id)
+
+    if(res.data.percentage.length == 0) return store.toggleAlert('This branch does not a set percentage yet.')
+
+    added_percentage.value = res.data.percentage[0]
+    
+    $('#get_resale_price').modal('show')
 }
 </script>
 

@@ -8,7 +8,8 @@
             <div class="col-5 mb-2 flex-grow-1" :class="{ 'col-12 col-lg-5': key == 'email' || key == 'name' || key == 'phone_number'}" v-for="(val,key) in array[0]">{{ key.split('_').length == 1 ? key.charAt(0).toUpperCase() + key.slice(1) : make_uppercase(key) }}:&nbsp;{{ value[key] }}</div>
         </div>
         <div v-if="selected_value !== null && selected_value == value && !is_date && type !== 'consultant_dates'" class="bottom-0 end-0 position-absolute bg-white shadow">
-            <button class="btn btn-mine text-secondary" title="view more" data-bs-target="#show_dates" data-bs-toggle="modal" v-if="type == 'consultant'"><i class="fa-solid fa-calendar-days"></i></button>
+            <button class="btn btn-mine text-secondary" title="show resale price" @click="$emit('get_price')" v-if="type == 'branch'"><i class="fa-solid fa-percent"></i></button>
+            <button class="btn btn-mine text-secondary" title="show available dates" data-bs-target="#show_dates" data-bs-toggle="modal" v-if="type == 'consultant'"><i class="fa-solid fa-calendar-days"></i></button>
             <button class="btn btn-mine text-secondary" title="view more" data-bs-target="#edit_dialog" data-bs-toggle="modal"><i class="fa-solid fa-eye"></i></button>
             <button class="btn btn-mine text-secondary" title="edit" data-bs-target="#edit_dialog" data-bs-toggle="modal" @click="$emit('edit_on',true)" v-if="!disabled_edit"><i class="fa-solid fa-file-pen"></i></button>
             <button class="btn btn-mine text-danger" title="delete" data-bs-target="#confirm_dialog" data-bs-toggle="modal"><i class="fa-solid fa-trash"></i></button>
@@ -74,7 +75,7 @@ defineProps({
         required: true,
     }
 })
-defineEmits(['select','edit_on','remove'])
+defineEmits(['select','edit_on','remove','get_price'])
 </script>
 <style scoped>
 .list-group-item {
