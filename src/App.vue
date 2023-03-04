@@ -3,7 +3,7 @@
     <RouterView name="sub_layout" />
     <RouterView />
 
-    <PharmacyLayout>
+    <PharmacyLayout v-if="$router.currentRoute.value.name.split('_')[0] == 'pharmacy'">
         <template #side_bar>
             <RouterView name="pharmacy_side_bar" />
         </template>
