@@ -46,12 +46,10 @@ export const useDataStore = defineStore("global_variables", () => {
         if(selected_consultant.value !== '' || create_mode.value == 'consultant') {
             consultant_loading.value = true
             consultants.value = []
-            selected_consultant.value = ''
         }
         if(selected_branch.value !== '' || create_mode.value == 'branch') {
             branch_loading.value = true
             branches.value = []
-            selected_branch.value = ''
         }
 
         const res_users = await init.sendDataToServer('users');
@@ -71,8 +69,14 @@ export const useDataStore = defineStore("global_variables", () => {
         }
 
         if(selected_user.value !== '') users.value = res_users.data.users
-        if(selected_consultant.value !== '' || create_mode.value == 'consultant') consultants.value = res_consultants.data.consultants
-        if(selected_branch.value !== '' || create_mode.value == 'branch') branches.value = res_branches.data.branches
+        if(selected_consultant.value !== '' || create_mode.value == 'consultant') {
+            consultants.value = res_consultants.data.consultants
+            selected_consultant.value = ''
+        }
+        if(selected_branch.value !== '' || create_mode.value == 'branch') {
+            branches.value = res_branches.data.branches
+            selected_branch.value = ''
+        }
 
         users.value.forEach((value)=>{
             delete value.created_at
