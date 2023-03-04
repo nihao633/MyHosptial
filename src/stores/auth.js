@@ -34,8 +34,6 @@ export const useAuthStore = defineStore("auth_variables", () => {
             email: email.value,
         })
 
-        console.log(res);
-
         // request failed
         if (res.message == 'Request failed with status code 500') {
             return store.toggleAlert('Unknown Error!!!')

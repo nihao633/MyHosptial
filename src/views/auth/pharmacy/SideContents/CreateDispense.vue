@@ -83,6 +83,7 @@ const submit_dispense = async () => {
         Object.entries(res?.response?.data?.errors).forEach(value =>{
             data_store.toggleAlert(value[1][0])
         })
+        return;
     }
 
     data_store.toggleAlert(res.data.status,false,200)

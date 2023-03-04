@@ -60,9 +60,9 @@ defineProps({
 })
 defineEmits(['select_row', 'begin_search', 'pause_search','edit_mode_on','begin_edit','pause_edit'])
 
-const is_disabled = (val,arr,exception = null) => {
-    if(exception == val) return false;
-    return (arr.indexOf(val) !== -1);
+const is_disabled = (val,arr,exception = []) => {
+    if(exception.indexOf(val) > -1) return false;
+    return (arr.indexOf(val) > -1);
 }
 
 const make_uppercase = (str) => {

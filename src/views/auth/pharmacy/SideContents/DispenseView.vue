@@ -1,6 +1,7 @@
 <template>
 <DataTable 
-    :disabled_list="['id','from','to']" 
+    :disabled_list="['id','branch_id','from','to','amount']"
+    :search_only="['id','branch_id','amount']"
     @begin_edit="begin_edit" 
     @pause_edit="pause_edit" 
     :edit_row="edit_row" 
@@ -41,8 +42,10 @@ import {
 } from 'pinia';
 import { ref,onMounted } from 'vue';
 import init from '@/helpers/init';
+import { usePosStore } from '../../../../stores/pos';
 
 const search_timer = ref('');
+const pos_store = usePosStore();
 const data_store = useDataStore();
 const store = usePharmacyStore();
 const {
@@ -51,12 +54,14 @@ const {
     dispense_records,
     branches,
     drugs,
-    searching,
-    not_found,
 } = storeToRefs(store);
 const {
     content_loading
 } = storeToRefs(data_store)
+const {
+    searching,
+    not_found
+} = storeToRefs(pos_store);
 const {
     initiate_dispense_records
 } = store
@@ -81,6 +86,8 @@ const begin_search = (key,value) => {
         const res = await init.sendDataToServer('dispense_records','post',data)
         searching.value = false
 
+        if(key == 'id' && value == 0 && value !== '') return not_found.value = true
+        if(key == 'branch_id' && value == 0 && value !== '') return not_found.value = true
         if(res.data.dispense_records.length == 0) return not_found.value = true
         if(res.data.drugs.length == 0) return not_found.value = true
         if(res.data.branches.length == 0) return not_found.value = true
@@ -89,30 +96,15 @@ const begin_search = (key,value) => {
         drugs.value = res.data.drugs
         branches.value = res.data.branches
 
-        let array = []
         dispense_records.value.forEach((value,index)=>{
             drugs.value.forEach((drug)=>{
-                if(drug.id === value.drug_id) array.push({ ...drug,...dispense_records.value[index] })
+                if(drug.id === value.drug_id) dispense_records.value[index] = {...{id: value.id, branch_id: value.branch_id},...{'Brand Name': drug['Brand Name'],'Generic Name': drug['Generic Name'],'Drug Form': drug['Drug Form'],'Drug Dosage': drug['Drug Dosage']},...{from: value.from, to: value.to, amount: value.amount} }
             })
-        })
-
-        dispense_records.value = array
-
-        dispense_records.value.forEach((value,index)=>{
             branches.value.forEach((branch)=>{
                 if(branch.id === value.to) dispense_records.value[index].to = branch.name
                 if(branch.id === value.from) dispense_records.value[index].from = branch.name
             })
         })
-
-        dispense_records.value.forEach((value)=>{
-            delete value.hospital_id
-            delete value.drug_id
-            delete value.deleted_at
-            delete value.created_at
-            delete value.updated_at
-        })
-
     }, 1000);
 }
 

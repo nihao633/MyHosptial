@@ -1,7 +1,7 @@
 <template>
 <DataTable 
-    :disabled_list="['id']" 
-    :search_only="['id']"
+    :disabled_list="['id','Purchased Quantity','Purchased Price','Purchased Date','Expiry Date']" 
+    :search_only="['id','Purchased Quantity','Purchased Price','Purchased Date','Expiry Date']"
     @begin_edit="begin_edit" 
     @pause_edit="pause_edit" 
     :edit_row="edit_row" 
@@ -36,7 +36,10 @@ import DataTable from '@/components/_Global_/_data_table.vue';
 import {
     usePharmacyStore
 } from '@/stores/pharmacy';
-import { useDataStore } from '@/stores/data';
+import { 
+    useDataStore 
+} from '@/stores/data';
+import { usePosStore } from '@/stores/pos';
 import {
     storeToRefs
 } from 'pinia';
@@ -44,19 +47,22 @@ import { ref,onMounted } from 'vue';
 import init from '@/helpers/init';
 
 const search_timer = ref('');
+const pos_store = usePosStore();
 const data_store = useDataStore();
 const store = usePharmacyStore();
 const {
     selected_row,
     edit_row,
     purchase_records,
-    searching,
-    not_found,
     drugs,
 } = storeToRefs(store);
 const {
     content_loading
 } = storeToRefs(data_store)
+const {
+    searching,
+    not_found
+} = storeToRefs(pos_store)
 const {
     initiate_purchase_records
 } = store
@@ -81,29 +87,33 @@ const begin_search = (key,value) => {
         const res = await init.sendDataToServer('purchase_records','post',data)
         searching.value = false
 
+        if(key == 'id' && value == 0 && value !== '') return not_found.value = true
         if(res.data.purchase_records.length == 0) return not_found.value = true
         if(res.data.drugs.length == 0) return not_found.value = true
 
         purchase_records.value = res.data.purchase_records
         drugs.value = res.data.drugs
 
-        let array = []
         purchase_records.value.forEach((value,index)=>{
             drugs.value.forEach((drug,)=>{
-                if(drug.id === value.drug_id) return array.push({ ...drug,...purchase_records.value[index] })
+                if(drug.id === value.drug_id) purchase_records.value[index] = { 
+                        ...{id: value.id},
+                        ...{
+                                'Brand Name': drug['Brand Name'],
+                                'Generic Name': drug['Generic Name'],
+                                'Drug Form': drug['Drug Form'],
+                                'Drug Dosage': drug['Drug Dosage']
+                            },
+                        ...{
+                                'Purchased Date': value['Purchased Date'],
+                                'Purchased Price': value['Purchased Price'], 
+                                'Purchased Quantity': value['Purchased Quantity'], 
+                                'Expiry Date': value['Expiry Date'] 
+                            } 
+                    }
             })
         })
 
-        purchase_records.value = array
-        
-        purchase_records.value.forEach((value)=>{
-            delete value.hospital_id
-            delete value.purchased_voucher_id
-            delete value.drug_id
-            delete value.deleted_at
-            delete value.created_at
-            delete value.updated_at
-        })
     }, 1000);
 }
 

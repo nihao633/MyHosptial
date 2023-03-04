@@ -73,7 +73,6 @@ export const useTransactionStore = defineStore('transaction_variables',()=>{
     //         selected_row.value[key] = value
     //         if(key_code == "Enter") {
     //             edit_row.value = false
-    //             console.log(selected_row.value);
     //             // await init.sendDataToServer('dispense_record/edit','post',selected_row.value)
     //             initiate()
     //         }

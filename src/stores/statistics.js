@@ -40,13 +40,9 @@ export const useStatisticsStore = defineStore('statistics',()=>{
             return;
         }
 
-        console.log(res);
-
         let pt_report = [];
         
         pt_report = res.data.reports.patient_report;
-
-        console.log(pt_report.data);
 
         timer_id.value = setTimeout(()=>{
             let chart = document.createElement('canvas');

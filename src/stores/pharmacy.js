@@ -35,8 +35,19 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
     const branch_id = ref('')
     const selected_drug = ref('')
 
+    const reset = () => {
+        const store = usePosStore();
+        const {
+            searching,
+            not_found
+        } = storeToRefs(store)
+
+        searching.value = null
+        not_found.value = false
+    }
 
     const initiate_pharmacy_create = async () => {
+        reset()
         selected_drug.value = ''
         drugs.value = []
         brand_name.value = ''
@@ -55,6 +66,7 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
     }
 
     const initiate_purchase_records = async () => {
+        reset()
         content_loading.value = true
         edit_row.value = false
         selected_row.value = ''
@@ -73,22 +85,29 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
         
         purchase_records.value.forEach((value,index)=>{
             drugs.value.forEach((drug,)=>{
-                if(drug.id === value.drug_id) purchase_records.value[index] = { ...drug,...purchase_records.value[index] }
+                if(drug.id === value.drug_id) purchase_records.value[index] = { 
+                        ...{id: value.id},
+                        ...{
+                                'Brand Name': drug['Brand Name'],
+                                'Generic Name': drug['Generic Name'],
+                                'Drug Form': drug['Drug Form'],
+                                'Drug Dosage': drug['Drug Dosage']
+                            },
+                        ...{
+                                'Purchased Date': value['Purchased Date'],
+                                'Purchased Price': value['Purchased Price'], 
+                                'Purchased Quantity': value['Purchased Quantity'], 
+                                'Expiry Date': value['Expiry Date'] 
+                            } 
+                    }
             })
         })
 
-        purchase_records.value.forEach((value)=>{
-            delete value.hospital_id
-            delete value.purchased_voucher_id
-            delete value.branch_id
-            delete value.deleted_at
-            delete value.created_at
-            delete value.updated_at
-        })
         content_loading.value = false;
     }
 
     const initiate_pharmacy_dispense_create = async () => {
+        reset()
         selected_drug.value = ''
         dispensed_amount.value = ''
         selected_branch.value = ''
@@ -119,6 +138,7 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
     }
 
     const initiate_dispense_records = async () => {
+        reset()
         content_loading.value = true
         edit_row.value = false
         selected_row.value = ''
@@ -135,10 +155,26 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
         branches.value = res_dispense_records.data.branches
         dispense_records.value = res_dispense_records.data.dispense_records
         drugs.value = res_dispense_records.data.drugs
-
+        
         dispense_records.value.forEach((value,index)=>{
             drugs.value.forEach((drug)=>{
-                if(drug.id === value.drug_id) dispense_records.value[index] = { ...drug,...dispense_records.value[index] }
+                if(drug.id === value.drug_id) dispense_records.value[index] = {
+                        ...{
+                                id: value.id,
+                                branch_id: value.branch_id
+                            },
+                        ...{
+                                'Brand Name': drug['Brand Name'],
+                                'Generic Name': drug['Generic Name'],
+                                'Drug Form': drug['Drug Form'],
+                                'Drug Dosage': drug['Drug Dosage']
+                            },
+                        ...{
+                                from: value.from, 
+                                to: value.to, 
+                                amount: value.amount
+                            } 
+                    }
             })
             branches.value.forEach((branch)=>{
                 if(branch.id === value.to) dispense_records.value[index].to = branch.name
@@ -146,18 +182,11 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
             })
         })
 
-        dispense_records.value.forEach((value)=>{
-            delete value.hospital_id
-            delete value.drug_id
-            delete value.deleted_at
-            delete value.created_at
-            delete value.updated_at
-            delete value.purchase_record
-        })
         content_loading.value = false;
     }
 
     const initiate_pharmacy_inventory = async () => {
+        reset()
         stock_report.value = []
         branches.value = []
         content_loading.value = true
