@@ -62,10 +62,13 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
         generic_name.value = ''
         drug_form.value = ''
         drug_dosage.value = ''    
+        drugs.value = []
         purchase_records.value = []
 
         const res_purchase_records = await init.sendDataToServer('purchase_records','post')
+        const res = await init.sendDataToServer('drugs')
 
+        drugs.value = res.data.drugs
         purchase_records.value = res_purchase_records.data.purchase_records
         
         purchase_records.value.forEach((value,index)=>{
@@ -77,7 +80,7 @@ export const usePharmacyStore = defineStore("pharmacy_variables", () => {
         purchase_records.value.forEach((value)=>{
             delete value.hospital_id
             delete value.purchased_voucher_id
-            delete value.drug_id
+            delete value.branch_id
             delete value.deleted_at
             delete value.created_at
             delete value.updated_at

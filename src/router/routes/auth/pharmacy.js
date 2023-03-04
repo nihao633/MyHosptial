@@ -2,7 +2,10 @@ const pharmacy_routes = [
     {
         path: "/pharmacy/create_purchase",
         name: "pharmacy_create_purchase",
-        component: () => import('@/views/auth/pharmacy/CreatePurchase.vue'),
+        components: {
+            pharmacy_side_bar: () => import('@/views/auth/pharmacy/SideBar.vue'),
+            pharmacy_side_content: () => import('@/views/auth/pharmacy/SideContents/CreatePurchase.vue')
+        },
         meta: {
             department: 'pharmacy',
             required_auth: true,
@@ -12,7 +15,10 @@ const pharmacy_routes = [
     {
         path: "/pharmacy/create_dispense",
         name: "pharmacy_create_dispense",
-        component: () => import('@/views/auth/pharmacy/CreateDispense.vue'),
+        components: {
+            pharmacy_side_bar: () => import('@/views/auth/pharmacy/SideBar.vue'),
+            pharmacy_side_content: () => import('@/views/auth/pharmacy/SideContents/CreateDispense.vue')
+        },
         meta: {
             department: 'pharmacy',
             required_auth: true,
@@ -22,7 +28,10 @@ const pharmacy_routes = [
     {
         path: "/pharmacy/purchase_records",
         name: "pharmacy_purchase",
-        component: () => import('@/views/auth/pharmacy/PurchaseView.vue'),
+        components: {
+            pharmacy_side_bar: () => import('@/views/auth/pharmacy/SideBar.vue'),
+            pharmacy_side_content: () => import('@/views/auth/pharmacy/SideContents/PurchaseView.vue')
+        },
         meta: {
             department: 'pharmacy',
             required_auth: true,
@@ -32,7 +41,10 @@ const pharmacy_routes = [
     {
         path: "/pharmacy/dispense_records",
         name: "pharmacy_dispense",
-        component: () => import('@/views/auth/pharmacy/DispenseView.vue'),
+        components: {
+            pharmacy_side_bar: () => import('@/views/auth/pharmacy/SideBar.vue'),
+            pharmacy_side_content: () => import('@/views/auth/pharmacy/SideContents/DispenseView.vue')
+        },
         meta: {
             department: 'pharmacy',
             required_auth: true,
@@ -42,7 +54,10 @@ const pharmacy_routes = [
     {
         path: "/pharmacy/inventory",
         name: "pharmacy_inventory",
-        component: () => import('@/views/auth/pharmacy/InventoryView.vue'),
+        components: {
+            pharmacy_side_bar: () => import('@/views/auth/pharmacy/SideBar.vue'),
+            pharmacy_side_content: () => import('@/views/auth/pharmacy/SideContents/InventoryView.vue')
+        },
         meta: {
             department: 'pharmacy',
             required_auth: true,

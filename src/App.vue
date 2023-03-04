@@ -2,6 +2,15 @@
 <MainLayout>
     <RouterView name="sub_layout" />
     <RouterView />
+
+    <PharmacyLayout>
+        <template #side_bar>
+            <RouterView name="pharmacy_side_bar" />
+        </template>
+        <template #side_content>
+            <RouterView name="pharmacy_side_content" />
+        </template>
+    </PharmacyLayout>
 </MainLayout>
 <AlertMessage class="top_most_alert" />
 </template>
@@ -16,6 +25,7 @@ import {
     RouterView
 } from "vue-router";
 import AlertMessage from "./components/_Global_/AlertMessage.vue";
+import PharmacyLayout from "./layouts/_layouts/PharmacyLayout.vue";
 
 onMounted(async () => {
     await init.sendDataToServer('sanctum/csrf-cookie')

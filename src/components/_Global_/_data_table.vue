@@ -8,7 +8,7 @@
         </thead>
         <tbody>
             <tr>
-                <td v-for="(value,key) in array[0]"><input type="text" @keyup="$emit('begin_search',key,$event.target.value)" @keydown="$emit('pause_search')" class="form-control" :style="key.length == 2 ? 'width: 6rem;': 'width: 10rem;'" :placeholder="make_uppercase(key)" :disabled="is_disabled(key,disabled_list,'id')"/></td>
+                <td v-for="(value,key) in array[0]"><input type="text" @keyup="$emit('begin_search',key,$event.target.value)" @keydown="$emit('pause_search')" class="form-control" :style="key.length == 2 ? 'width: 6rem;': 'width: 10rem;'" :placeholder="make_uppercase(key)" :disabled="is_disabled(key,disabled_list,search_only)"/></td>
             </tr>
             <tr class="my-row" v-for="drug in array" :class="{ active: selected_row == drug }" @click="$emit('select_row',drug)" @dblclick="$emit('edit_mode_on')" v-if="searching!== true && array.length !== 0 && !not_found">
                 <td v-for="(value,key) in array[0]">{{ edit_row ? '' : drug[key] }} <input :type="key == 'Purchased Date' ? 'Date' : 'text'" v-if="edit_row && selected_row == drug" class="form-control" :style="is_disabled(key,disabled_list) ? 'width: 6rem; background-color: #1d92cf !important; color: white; border: 0;': 'width: 10rem;'" :value="drug[key]"  @keyup="$emit('begin_edit',key,$event.target.value,$event.code)" @keydown="$emit('pause_edit')" :disabled="is_disabled(key,disabled_list)"/></td>
@@ -30,6 +30,10 @@
 
 <script setup>
 defineProps({
+    search_only: {
+        type: Array,
+        default: []
+    },
     path: {
         type: Array,
     },

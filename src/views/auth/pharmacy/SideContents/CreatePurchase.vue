@@ -34,20 +34,20 @@
 </template>
 
 <script setup>
-import InputBoxes from '../Pharmacy/components/InputBoxes.vue';
+import InputBoxes from '@/components/Pharmacy/InputBoxes.vue';
 import axios from 'axios';
 import {
     usePharmacyStore
-} from '../../stores/pharmacy';
+} from '@/stores/pharmacy';
 import {
     storeToRefs
 } from 'pinia';
-import _searchable_list from '../_Global_/_searchable_list.vue';
+import _searchable_list from '@/components/_Global_/_searchable_list.vue';
 import {
     ref,
     onMounted
 } from 'vue';
-import { useDataStore } from '../../stores/data';
+import { useDataStore } from '@/stores/data';
 
 const drug_name_exists = ref(false)
 

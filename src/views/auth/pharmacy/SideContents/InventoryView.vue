@@ -24,16 +24,16 @@
 </template>
 
 <script setup>
-import DataTable from '../_Global_/_data_table.vue';
+import DataTable from '@/components/_Global_/_data_table.vue';
 import {
     usePharmacyStore
-} from '../../stores/pharmacy';
-import { useDataStore } from '../../stores/data';
+} from '@/stores/pharmacy';
+import { useDataStore } from '@/stores/data';
 import {
     storeToRefs
 } from 'pinia';
 import { ref,onMounted } from 'vue';
-import init from '../../helpers/init';
+import init from '@/helpers/init';
 
 const data = ref({});
 const search_timer = ref('');

@@ -1,6 +1,7 @@
 <template>
 <DataTable 
-    :disabled_list="['id','from','to']" 
+    :disabled_list="['id']" 
+    :search_only="['id']"
     @begin_edit="begin_edit" 
     @pause_edit="pause_edit" 
     :edit_row="edit_row" 
@@ -9,13 +10,13 @@
     :not_found="not_found" 
     @begin_search="begin_search" 
     @pause_search="pause_search" 
-    :array="dispense_records" 
+    :array="purchase_records" 
     :selected_row="selected_row" 
     @select_row="select_row" 
-    v-if="!content_loading && dispense_records.length !== 0" 
+    v-if="!content_loading && purchase_records.length !== 0"
 />
-<div class="p-3 text-danger" v-if="!content_loading && dispense_records.length == 0 && searching == null">
-    There aren't any drug dispense records to display in the main store.
+<div class="p-3 text-danger" v-if="!content_loading && purchase_records.length == 0 && searching == null">
+    There aren't any drug purchase records to display in the main store.
 </div>
 <div v-if="content_loading" class="p-2">
     <h6>
@@ -31,16 +32,16 @@
 </template>
 
 <script setup>
-import DataTable from '../_Global_/_data_table.vue';
+import DataTable from '@/components/_Global_/_data_table.vue';
 import {
     usePharmacyStore
-} from '../../stores/pharmacy';
-import { useDataStore } from '../../stores/data';
+} from '@/stores/pharmacy';
+import { useDataStore } from '@/stores/data';
 import {
     storeToRefs
 } from 'pinia';
 import { ref,onMounted } from 'vue';
-import init from '../../helpers/init';
+import init from '@/helpers/init';
 
 const search_timer = ref('');
 const data_store = useDataStore();
@@ -48,21 +49,20 @@ const store = usePharmacyStore();
 const {
     selected_row,
     edit_row,
-    dispense_records,
-    branches,
-    drugs,
+    purchase_records,
     searching,
     not_found,
+    drugs,
 } = storeToRefs(store);
 const {
     content_loading
 } = storeToRefs(data_store)
 const {
-    initiate_dispense_records
+    initiate_purchase_records
 } = store
 
 onMounted(()=>{
-    initiate_dispense_records()
+    initiate_purchase_records()
 })
 
 const select_row = (val) => {
@@ -78,41 +78,32 @@ const begin_search = (key,value) => {
     search_timer.value = setTimeout(async () => {
         const data = new Object();
         data[key] = value
-        const res = await init.sendDataToServer('dispense_records','post',data)
+        const res = await init.sendDataToServer('purchase_records','post',data)
         searching.value = false
 
-        if(res.data.dispense_records.length == 0) return not_found.value = true
+        if(res.data.purchase_records.length == 0) return not_found.value = true
         if(res.data.drugs.length == 0) return not_found.value = true
-        if(res.data.branches.length == 0) return not_found.value = true
 
-        dispense_records.value = res.data.dispense_records
+        purchase_records.value = res.data.purchase_records
         drugs.value = res.data.drugs
-        branches.value = res.data.branches
 
         let array = []
-        dispense_records.value.forEach((value,index)=>{
-            drugs.value.forEach((drug)=>{
-                if(drug.id === value.drug_id) array.push({ ...drug,...dispense_records.value[index] })
+        purchase_records.value.forEach((value,index)=>{
+            drugs.value.forEach((drug,)=>{
+                if(drug.id === value.drug_id) return array.push({ ...drug,...purchase_records.value[index] })
             })
         })
 
-        dispense_records.value = array
-
-        dispense_records.value.forEach((value,index)=>{
-            branches.value.forEach((branch)=>{
-                if(branch.id === value.to) dispense_records.value[index].to = branch.name
-                if(branch.id === value.from) dispense_records.value[index].from = branch.name
-            })
-        })
-
-        dispense_records.value.forEach((value)=>{
+        purchase_records.value = array
+        
+        purchase_records.value.forEach((value)=>{
             delete value.hospital_id
+            delete value.purchased_voucher_id
             delete value.drug_id
             delete value.deleted_at
             delete value.created_at
             delete value.updated_at
         })
-
     }, 1000);
 }
 
@@ -128,8 +119,8 @@ const begin_edit = async (key,value,key_code) => {
         selected_row.value[key] = value
         if(key_code == "Enter") {
             edit_row.value = false
-            await init.sendDataToServer('dispense_record/edit','post',selected_row.value)
-            initiate_dispense_records()
+            await init.sendDataToServer('purchase_records/edit','post',selected_row.value)
+            initiate_purchase_records()
         }
     }, 1000);
 }

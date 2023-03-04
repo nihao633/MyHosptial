@@ -37,12 +37,12 @@
 </div>
 </template>
 <script setup>
-import { usePharmacyStore } from '../../stores/pharmacy';
-import { usePosStore } from '../../stores/pos';
-import { useDataStore } from '../../stores/data';
+import { usePharmacyStore } from '@/stores/pharmacy';
+import { usePosStore } from '@/stores/pos';
+import { useDataStore } from '@/stores/data';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
-import init from '../../helpers/init';
+import init from '@/helpers/init';
 
 const pos_store = usePosStore();
 const data_store = useDataStore();
@@ -66,6 +66,7 @@ const {
 } = store;
 
 onMounted(async ()=>{
+    
     await initiate_pharmacy_dispense_create()
 })
 
