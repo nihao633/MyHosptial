@@ -10,7 +10,7 @@
                 <div class="input-group mb-3">
                     <span class="input-group-text">Added Percentage:</span>
                     <input v-if="edit" id="price_percentage" type="text" class="form-control" placeholder="Type added percentage here" @input="$emit('update:percentage',$event.target.value)" :value="percentage">
-                    <input class="form-control text-end" v-else :value="percentage.added_percentage" disabled>
+                    <input class="form-control text-end" v-else :value="percentage" disabled>
                     <span class="input-group-text">%</span>
                 </div>
             </div>

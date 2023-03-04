@@ -45,7 +45,7 @@
         <ListView :style="'height: 200px; overflow: auto;'" :type="'consultant_dates'" @select="select_available_date" :loading="consultant_available_date_loading" :array="consultant_dates" :selected_value="selected_set_date"/>
     </DateEdit>
     <ResalePrice :id="'set_resale_price'" :edit="true" :selected_branch="selected_branch" v-model:percentage="added_percentage" @submit="save_resale_price()" />
-    <ResalePrice :id="'get_resale_price'" :selected_branch="selected_branch" :percentage="added_percentage" />
+    <ResalePrice :id="'get_resale_price'" :selected_branch="selected_branch" :percentage="resale_percentage" />
 </div>
 </template>
 
@@ -76,6 +76,7 @@ const create_value = ref({});
 const selected_set_date = ref('');
 const edit_mode = ref(false);
 const added_percentage = ref(null);
+const resale_percentage = ref(null);
 const {
     create_mode,
     auth_user,
@@ -128,9 +129,8 @@ onMounted(() => {
     $('#set_resale_price').on('shown.bs.modal', function () {
         $('#price_percentage').focus()
     })
-    
     $('#get_resale_price').on('hide.bs.modal', function () {
-        added_percentage.value = null
+        resale_percentage.value = null
     })
     initiate_settings()
 })
@@ -351,8 +351,8 @@ const get_resale_price = async() => {
 
     if(res.data.percentage.length == 0) return store.toggleAlert('This branch does not a set percentage yet.')
 
-    added_percentage.value = res.data.percentage[0]
-    
+    resale_percentage.value = res.data.percentage[0].added_percentage
+    console.log(resale_percentage.value);
     $('#get_resale_price').modal('show')
 }
 </script>
