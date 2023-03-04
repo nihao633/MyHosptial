@@ -46,10 +46,12 @@ export const useDataStore = defineStore("global_variables", () => {
         if(selected_consultant.value !== '' || create_mode.value == 'consultant') {
             consultant_loading.value = true
             consultants.value = []
+            selected_consultant.value = ''
         }
         if(selected_branch.value !== '' || create_mode.value == 'branch') {
             branch_loading.value = true
             branches.value = []
+            selected_branch.value = ''
         }
 
         const res_users = await init.sendDataToServer('users');
