@@ -128,6 +128,10 @@ onMounted(() => {
     $('#set_resale_price').on('shown.bs.modal', function () {
         $('#price_percentage').focus()
     })
+    
+    $('#get_resale_price').on('hide.bs.modal', function () {
+        added_percentage.value = null
+    })
     initiate_settings()
 })
 
