@@ -2,7 +2,6 @@ import axios from "axios";
 import { useDataStore } from "@/stores/data";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import { useOpdStore } from "@/stores/medicord";
 
 const _SERVER_ADDR = (import.meta.env.MODE == 'production') ? import.meta.env.VITE_SERVER_ADDRESS : import.meta.env.VITE_DEV_SERVER_ADDRESS;
 const current_time = ref('Loading...')
@@ -38,7 +37,15 @@ const check_server_response = async () => {
     const store = useDataStore();
     const { 
         auth_user,
+        selected_locale
      } = storeToRefs(store);
+
+     document.cookie.split(';').forEach(val => {
+        while (val.charAt(0) === ' ')
+            val = val.substring(1,val.length)
+        if (val.indexOf(encodeURIComponent('locale') + '=') === 0)
+            selected_locale.value = decodeURIComponent(val.substring((encodeURIComponent('locale') + '=').length, val.length));
+    })
 
     const res = await sendDataToServer('init');
 
@@ -51,7 +58,7 @@ const check_server_response = async () => {
     return true;
 }
 
-const initiate = async () => { 
+const initiate = async () => {
     is_server_up.value = await check_server_response()
 
     return is_server_up;

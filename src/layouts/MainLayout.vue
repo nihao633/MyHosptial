@@ -79,7 +79,7 @@
         </div>
     </div>
 </div>
-<select class="position-fixed bottom-0 mb-5 end-0" v-model="selected_locale">
+<select @change="set_locale()" class="position-fixed bottom-0 end-0 mb-3" style="z-index: 9999!important;" v-model="selected_locale">
     <option value="en">EN</option>
     <option value="mm">MM</option>
 </select>
@@ -182,8 +182,11 @@ const {
     logout
 } = auth_store;
 
-const set_locale = async () => {
-    await init.sendDataToServer('user')
+const set_locale = () => {
+    let date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000))
+
+    document.cookie = `${encodeURIComponent('locale')}=${encodeURIComponent(selected_locale.value)}; expires=${date.toGMTString()}; path=/;`;
 }
 </script>
 
