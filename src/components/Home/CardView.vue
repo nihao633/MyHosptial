@@ -4,7 +4,7 @@
     <div class="card-body">
         <h5 class="card-title">{{ title }}</h5>
         <p class="card-text">{{ description }}</p>
-        <RouterLink :to="link" class="btn btn-primary" :style="authorized ? '' : 'pointer-events: none; background: grey !important; border: grey 0 !important;'">{{ authorized ? 'Click Here >>' : 'Unauthorized'}}</RouterLink>
+        <RouterLink :to="link" class="btn btn-primary" :style="authorized ? '' : 'pointer-events: none; background: grey !important; border: grey 0 !important;'">{{ authorized ? $translate('click_here') : $translate('unauthorized')}}</RouterLink>
     </div>
 </div>
 </template>

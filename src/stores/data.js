@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import init from '../helpers/init'
 
 export const useDataStore = defineStore("global_variables", () => {
+    const selected_locale = ref('en')
     const create_mode = ref('')
     const content_loading = ref(false);
     const page_loading = ref(true);
@@ -153,6 +154,7 @@ export const useDataStore = defineStore("global_variables", () => {
         user_loading,
         branch_loading,
         consultant_dates,
-        create_mode
+        create_mode,
+        selected_locale
     };
 });

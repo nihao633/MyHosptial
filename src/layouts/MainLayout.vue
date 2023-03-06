@@ -3,7 +3,7 @@
     <div class="container">
         <RouterLink class="navbar-brand custom-text-color" to="/">
             <i class="fa-solid fa-book-medical"></i>
-            {{ auth_user ? auth_user.setting.hospital_name : 'My Hospital EMRS' }}
+            {{ auth_user ? auth_user.setting.hospital_name : $translate('default_hospital_name') }}
         </RouterLink>
         <li class="nav-item dropdown list-unstyled" v-if="!store.page_loading && store.auth_user">
             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,10 +17,10 @@
                         <span class="d-block d-lg-none"><small><em>({{ auth_user.name }})</em></small></span>
                     </a>
                 </li>
-                <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/settings">Settings</RouterLink></li>
-                <li v-if="auth_user.rank == 'admin'"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reports" style="cursor:pointer;">Reports</a></li>
+                <li v-if="auth_user.rank == 'admin'"><RouterLink class="dropdown-item" to="/settings">{{ $translate('settings') }}</RouterLink></li>
+                <li v-if="auth_user.rank == 'admin'"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reports" style="cursor:pointer;">{{ $translate('reports') }}</a></li>
                 <li>
-                    <a class="dropdown-item" href="#" @click="logout">Log Out</a>
+                    <a class="dropdown-item" href="#" @click="logout">{{ $translate('logout') }}</a>
                 </li>
             </ul>
         </li>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="h5 col-2 px-0 text-white">
-                    Loading...
+                    {{ $translate("loading") }}
                 </div>
                 <div class="text-center">
                     <img src="/images/loading.gif"/>
@@ -72,13 +72,17 @@
                         <small>{{ auth_user?.setting.hospital_name }}</small>
                     </div>
                     <div class="toast-body shadow bg-white rounded-bottom">
-                    Your internet connection is lost.
+                    {{ $translate('internet_lost_msg') }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<select class="position-fixed bottom-0 mb-5 end-0" v-model="selected_locale">
+    <option value="en">EN</option>
+    <option value="mm">MM</option>
+</select>
 <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
   <div id="is_online" class="toast hide" data-bs-autohide="true" data-bs-delay="10000">
     <div class="toast-header text-white shadow bg-success">
@@ -88,7 +92,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
     </div>
     <div class="toast-body shadow bg-white rounded-bottom">
-      Your internet connection is restored.
+      {{ $translate('internet_restore_msg') }}
     </div>
   </div>
 </div>
@@ -126,6 +130,9 @@ const timer_id = ref(null);
 const net_msg_shown = ref(true);
 const is_online = ref(true);
 const store = useDataStore();
+const {
+    selected_locale
+} = storeToRefs(store);
 const auth_store = useAuthStore();
 
 watchEffect(()=>{
@@ -174,6 +181,10 @@ const {
 const {
     logout
 } = auth_store;
+
+const set_locale = async () => {
+    await init.sendDataToServer('user')
+}
 </script>
 
 <style>
